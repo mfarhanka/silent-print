@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SilentPrints - Online Printing Marketplace</title>
+    <title>SilentPrint - Online Printing Marketplace</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -18,7 +18,7 @@
     <header class="sticky-top bg-white shadow-sm">
         <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
-                <a class="navbar-brand fw-bold text-primary" href="#">SilentPrints</a>
+                <a class="navbar-brand fw-bold text-primary" href="#">SilentPrint</a>
                 
                 <div class="d-flex flex-grow-1 mx-lg-4 order-lg-1 order-3 mt-3 mt-lg-0">
                     <div class="input-group w-100">
@@ -385,8 +385,8 @@
         <div class="container">
             <div class="row g-5">
                 <div class="col-md-4">
-                    <h5 class="fw-bold mb-4">SILENTPRINTS</h5>
-                    <p class="small text-muted">SilentPrints is a leading online printing marketplace specializing in high-quality business and marketing materials.</p>
+                    <h5 class="fw-bold mb-4">SILENTPRINT</h5>
+                    <p class="small text-muted">SilentPrint is a leading online printing marketplace specializing in high-quality business and marketing materials.</p>
                     <div class="d-flex gap-3 h4 mt-4">
                         <i class="bi bi-facebook text-primary"></i>
                         <i class="bi bi-instagram text-danger"></i>
@@ -395,7 +395,7 @@
                     </div>
                 </div>
                 <div class="col-6 col-md-2">
-                    <h6 class="fw-bold mb-4">About SilentPrints</h6>
+                    <h6 class="fw-bold mb-4">About SilentPrint</h6>
                     <ul class="list-unstyled small text-muted">
                         <li class="mb-2">Our Story</li>
                         <li class="mb-2">Member Rewards</li>
@@ -423,7 +423,7 @@
             </div>
             <hr class="my-5 opacity-10">
             <div class="text-center small text-muted">
-                &copy; 2026 SilentPrints Corporation. All rights reserved.
+                &copy; 2026 SilentPrint Corporation. All rights reserved.
             </div>
         </div>
     </footer>
