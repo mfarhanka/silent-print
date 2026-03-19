@@ -262,7 +262,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-5 mb-5 mb-lg-0 text-center">
-                    <img src="https://via.placeholder.com/350x350/ffffff/000000?text=FAQ+Illustration" class="img-fluid" alt="FAQ">
+                    <img src="img/faqs.png" class="img-fluid faq-image" alt="FAQ" loading="lazy">
                 </div>
                 <div class="col-lg-7">
                     <h2 class="fw-bold mb-4">GENERAL <span class="text-primary">FAQ</span></h2>
@@ -310,7 +310,7 @@
             <div class="row g-4">
                 <div class="col-md-3">
                     <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Laptop" class="card-img-top">
+                        <img src="img/blog/guides.png" class="card-img-top blog-image" alt="Guides" loading="lazy">
                         <div class="card-body">
                             <small class="text-primary">Guides</small>
                             <h6 class="fw-bold mt-2">Services & Features Update</h6>
@@ -319,7 +319,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="https://via.placeholder.com/300x200?text=World" class="card-img-top">
+                        <img src="img/blog/shipping.png" class="card-img-top blog-image" alt="Shipping" loading="lazy">
                         <div class="card-body">
                             <small class="text-primary">Shipping</small>
                             <h6 class="fw-bold mt-2">Logistics Partners Worldwide</h6>
@@ -328,7 +328,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Banner" class="card-img-top">
+                        <img src="img/blog/products.png" class="card-img-top blog-image" alt="Products" loading="lazy">
                         <div class="card-body">
                             <small class="text-primary">Products</small>
                             <h6 class="fw-bold mt-2">Comprehensive Signage Guide</h6>
@@ -337,7 +337,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="https://via.placeholder.com/300x200?text=Marketing" class="card-img-top">
+                        <img src="img/blog/trends.png" class="card-img-top blog-image" alt="Trends" loading="lazy">
                         <div class="card-body">
                             <small class="text-primary">Trends</small>
                             <h6 class="fw-bold mt-2">Marketing Material Success</h6>
