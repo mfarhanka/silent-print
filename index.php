@@ -33,7 +33,7 @@
 
                 <div class="d-flex align-items-center order-lg-2 order-2 gap-3 ms-lg-3">
                     <div class="dropdown d-none d-md-block">
-                        <button class="btn btn-light btn-sm dropdown-toggle" type="button">USD</button>
+                        <button class="btn btn-light btn-sm dropdown-toggle" type="button">MYR</button>
                     </div>
                     <button class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</button>
                     <button class="btn btn-primary btn-sm rounded-pill px-3">Sign Up</button>
