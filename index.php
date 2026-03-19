@@ -203,15 +203,15 @@
             <h2 class="fw-bold mb-4">MEMBER PRIVILEGE PLAN</h2>
             <div class="row justify-content-center g-4">
                 <div class="col-4 col-md-2">
-                    <img src="https://via.placeholder.com/80x80/silver/000?text=Silver" class="img-fluid rounded-circle mb-2 border border-2 border-white shadow">
+                    <img src="img/membership/silver.png" class="img-fluid membership-tier-image rounded-circle mb-2 border border-2 border-white shadow" alt="Silver tier" loading="lazy">
                     <div class="small fw-bold">SILVER</div>
                 </div>
                 <div class="col-4 col-md-2">
-                    <img src="https://via.placeholder.com/80x80/gold/000?text=Gold" class="img-fluid rounded-circle mb-2 border border-2 border-white shadow">
+                    <img src="img/membership/gold.png" class="img-fluid membership-tier-image rounded-circle mb-2 border border-2 border-white shadow" alt="Gold tier" loading="lazy">
                     <div class="small fw-bold">GOLD</div>
                 </div>
                 <div class="col-4 col-md-2">
-                    <img src="https://via.placeholder.com/80x80/platinum/000?text=Plat" class="img-fluid rounded-circle mb-2 border border-2 border-white shadow">
+                    <img src="img/membership/platinum.png" class="img-fluid membership-tier-image rounded-circle mb-2 border border-2 border-white shadow" alt="Platinum tier" loading="lazy">
                     <div class="small fw-bold">PLATINUM</div>
                 </div>
             </div>

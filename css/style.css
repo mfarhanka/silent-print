@@ -94,6 +94,12 @@ body {
     padding: 40px 0;
 }
 
+.membership-tier-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
 .rating-box {
     background: #f0f7ff;
     border-radius: 12px;
