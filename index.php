@@ -10,95 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-bg: #f8f9fa;
-            --dark-blue: #003366;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            color: #333;
-        }
-        .navbar-top {
-            font-size: 0.85rem;
-            border-bottom: 1px solid #eee;
-        }
-        .nav-link {
-            font-weight: 500;
-            color: #444 !important;
-        }
-        .hero-section {
-            background-color: #e9f5ff;
-            position: relative;
-            overflow: hidden;
-        }
-        .promo-badge {
-            background: red;
-            color: white;
-            padding: 5px 20px;
-            transform: rotate(-45deg);
-            position: absolute;
-            top: 20px;
-            left: -30px;
-            z-index: 10;
-        }
-        .category-card {
-            border: none;
-            transition: transform 0.2s;
-            text-align: center;
-        }
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-        .category-img {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 10px;
-        }
-        .member-privilege {
-            background: linear-gradient(90deg, #001f3f 0%, #003366 100%);
-            color: white;
-            padding: 40px 0;
-        }
-        .rating-box {
-            background: #f0f7ff;
-            border-radius: 12px;
-            padding: 30px;
-        }
-        .faq-section {
-            padding: 60px 0;
-        }
-        .footer-top {
-            background: #fdfdfd;
-            border-top: 1px solid #eee;
-            padding: 40px 0;
-        }
-        .footer-main {
-            background: #eef7ff;
-            padding: 60px 0;
-        }
-        .btn-primary-custom {
-            background-color: var(--primary-blue);
-            border: none;
-            padding: 8px 24px;
-        }
-        .search-bar {
-            background: #f1f3f4;
-            border: none;
-            border-radius: 20px;
-            padding-left: 15px;
-        }
-        .svg-placeholder {
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #777;
-            border-radius: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -518,5 +430,6 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
