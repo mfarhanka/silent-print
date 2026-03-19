@@ -128,7 +128,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Calendars" class="img-fluid">
+                                    <img src="calendars.png" class="img-fluid category-product-image" alt="Calendars" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Calendars</div>
                             </div>
@@ -136,7 +136,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Notebooks" class="img-fluid">
+                                    <img src="notebooks.png" class="img-fluid category-product-image" alt="Notebooks" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Notebooks</div>
                             </div>
@@ -144,7 +144,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Bags" class="img-fluid">
+                                    <img src="https://via.placeholder.com/120x100?text=Bags" class="img-fluid category-product-image" alt="Bags" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Paper Bags</div>
                             </div>
@@ -152,7 +152,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Cards" class="img-fluid">
+                                    <img src="https://via.placeholder.com/120x100?text=Cards" class="img-fluid category-product-image" alt="Business Cards" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Business Cards</div>
                             </div>
@@ -160,7 +160,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Envelopes" class="img-fluid">
+                                    <img src="https://via.placeholder.com/120x100?text=Envelopes" class="img-fluid category-product-image" alt="Envelopes" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Envelopes</div>
                             </div>
@@ -168,7 +168,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Folders" class="img-fluid">
+                                    <img src="https://via.placeholder.com/120x100?text=Folders" class="img-fluid category-product-image" alt="Folders" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Folder Sets</div>
                             </div>
@@ -176,7 +176,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Packaging" class="img-fluid">
+                                    <img src="https://via.placeholder.com/120x100?text=Packaging" class="img-fluid category-product-image" alt="Food Packaging" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Food Packaging</div>
                             </div>
@@ -184,7 +184,7 @@
                         <div class="col-6 col-md-3">
                             <div class="category-card">
                                 <div class="category-img">
-                                    <img src="https://via.placeholder.com/120x100?text=Marketing" class="img-fluid">
+                                    <img src="https://via.placeholder.com/120x100?text=Marketing" class="img-fluid category-product-image" alt="Marketing Materials" loading="lazy">
                                 </div>
                                 <div class="small fw-bold">Marketing Materials</div>
                             </div>
