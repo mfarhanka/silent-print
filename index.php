@@ -59,7 +59,7 @@
     <section class="hero-section">
         <div class="hero-video-wrap" aria-hidden="true">
             <iframe
-                src="https://www.youtube.com/embed/R32fccQBTEo?autoplay=1&mute=1&loop=1&playlist=R32fccQBTEo&controls=0&showinfo=0&modestbranding=1&playsinline=1&rel=0"
+                src="https://www.youtube.com/embed/gqec9YvbnG8?autoplay=1&mute=1&loop=1&playlist=gqec9YvbnG8&controls=0&showinfo=0&modestbranding=1&playsinline=1&rel=0"
                 title="SilentPrint Banner Background Video"
                 allow="autoplay; encrypted-media; picture-in-picture"
                 referrerpolicy="strict-origin-when-cross-origin"
