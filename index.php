@@ -54,33 +54,15 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero-section py-5">
-        <div class="promo-badge small fw-bold">NEW</div>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h1 class="display-5 fw-bold mb-3">Food Tray</h1>
-                    <p class="lead text-muted mb-4">Premium Food Packaging for takeaway, catering & everyday business.</p>
-                    <div class="d-flex gap-3 mb-4">
-                        <div class="text-center p-3 bg-white rounded shadow-sm border border-primary" style="width: 100px;">
-                            <div class="fw-bold h4 mb-0 text-primary">3</div>
-                            <small class="text-muted">Sizes</small>
-                        </div>
-                        <div class="text-center p-3 bg-white rounded shadow-sm" style="width: 100px;">
-                            <div class="fw-bold h4 mb-0">4</div>
-                            <small class="text-muted">Process Days</small>
-                        </div>
-                        <div class="text-center p-3 bg-white rounded shadow-sm" style="width: 100px;">
-                            <div class="fw-bold h4 mb-0">MOQ</div>
-                            <small class="text-muted text-nowrap">200 pcs</small>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary-custom rounded-pill">LEARN MORE</button>
-                </div>
-                <div class="col-lg-6 text-center mt-5 mt-lg-0">
-                    <img src="https://via.placeholder.com/500x350/E3F2FD/0D47A1?text=Product+Hero+Image" class="img-fluid rounded" alt="Hero Image">
-                </div>
-            </div>
+    <section class="hero-section">
+        <div class="hero-video-wrap" aria-hidden="true">
+            <iframe
+                src="https://www.youtube.com/embed/R32fccQBTEo?autoplay=1&mute=1&loop=1&playlist=R32fccQBTEo&controls=0&showinfo=0&modestbranding=1&playsinline=1&rel=0"
+                title="SilentPrint Banner Background Video"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin"
+                tabindex="-1">
+            </iframe>
         </div>
     </section>
 

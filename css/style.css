@@ -20,20 +20,32 @@ body {
 }
 
 .hero-section {
-    background-color: #e9f5ff;
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 260px;
+    background: #000;
 }
 
-.promo-badge {
-    background: red;
-    color: white;
-    padding: 5px 20px;
-    transform: rotate(-45deg);
+.hero-video-wrap {
     position: absolute;
-    top: 20px;
-    left: -30px;
-    z-index: 10;
+    inset: 0;
+    z-index: 0;
+    background: #000;
+}
+
+.hero-video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+@media (max-width: 991.98px) {
+    .hero-section {
+        min-height: 220px;
+    }
 }
 
 .category-card {
