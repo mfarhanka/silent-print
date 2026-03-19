@@ -9,6 +9,18 @@ body {
     color: #333;
 }
 
+.site-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+.footer-logo {
+    height: 32px;
+    width: auto;
+    display: block;
+}
+
 .navbar-top {
     font-size: 0.85rem;
     border-bottom: 1px solid #eee;
@@ -45,6 +57,10 @@ body {
 @media (max-width: 991.98px) {
     .hero-section {
         min-height: 220px;
+    }
+
+    .site-logo {
+        height: 34px;
     }
 }
 

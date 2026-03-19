@@ -18,7 +18,9 @@
     <header class="sticky-top bg-white shadow-sm">
         <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
-                <a class="navbar-brand fw-bold text-primary" href="#">SilentPrint</a>
+                <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="#">
+                    <img src="img/logo.png" class="site-logo" alt="SilentPrint" loading="eager">
+                </a>
                 
                 <div class="d-flex flex-grow-1 mx-lg-4 order-lg-1 order-3 mt-3 mt-lg-0">
                     <div class="input-group w-100">
@@ -367,7 +369,9 @@
         <div class="container">
             <div class="row g-5">
                 <div class="col-md-4">
-                    <h5 class="fw-bold mb-4">SILENTPRINT</h5>
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="img/logo.png" class="footer-logo" alt="SilentPrint" loading="lazy">
+                    </div>
                     <p class="small text-muted">SilentPrint is a leading online printing marketplace specializing in high-quality business and marketing materials.</p>
                     <div class="d-flex gap-3 h4 mt-4">
                         <i class="bi bi-facebook text-primary"></i>
