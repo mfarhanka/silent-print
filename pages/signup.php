@@ -20,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirmPassword = $_POST['confirmPassword'] ?? '';
     $agreeTerms = $_POST['agreeTerms'] ?? '';
+    $csrfToken = $_POST['csrf_token'] ?? '';
+
+    if (!authVerifyCsrfToken($csrfToken)) {
+        $signupErrors[] = 'Your session expired. Please try again.';
+    }
 
     if ($signupValues['firstName'] === '' || $signupValues['lastName'] === '') {
         $signupErrors[] = 'First name and last name are required.';
@@ -97,6 +102,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     </div>
                                 <?php endif; ?>
                                 <form action="" method="post" novalidate>
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label for="firstName" class="form-label">First name</label>

@@ -103,3 +103,23 @@ function authFullName(?array $user): string
 
     return trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
 }
+
+function authCsrfToken(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    return $_SESSION['csrf_token'];
+}
+
+function authVerifyCsrfToken(?string $token): bool
+{
+    $sessionToken = $_SESSION['csrf_token'] ?? '';
+
+    if (!is_string($token) || $token === '' || !is_string($sessionToken) || $sessionToken === '') {
+        return false;
+    }
+
+    return hash_equals($sessionToken, $token);
+}

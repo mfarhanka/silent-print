@@ -15,8 +15,11 @@ $loginEmail = trim($_POST['email'] ?? '');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $user = authFindUserByEmail($loginEmail);
+    $csrfToken = $_POST['csrf_token'] ?? '';
 
-    if ($loginEmail === '' || $password === '') {
+    if (!authVerifyCsrfToken($csrfToken)) {
+        $loginError = 'Your session expired. Please try again.';
+    } elseif ($loginEmail === '' || $password === '') {
         $loginError = 'Email and password are required.';
     } elseif (!$user || !password_verify($password, $user['password_hash'] ?? '')) {
         $loginError = 'The email or password is incorrect.';
@@ -61,6 +64,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     <div class="alert alert-danger auth-alert" role="alert"><?= htmlspecialchars($loginError) ?></div>
                                 <?php endif; ?>
                                 <form action="" method="post" novalidate>
+                                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email address</label>
                                         <input type="email" class="form-control auth-input" id="email" name="email" placeholder="name@company.com" value="<?= htmlspecialchars($loginEmail) ?>" required>
