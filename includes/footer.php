@@ -18,7 +18,7 @@
             <div class="row g-5">
                 <div class="col-md-4">
                     <div class="d-flex align-items-center mb-4">
-                        <img src="img/logo.png" class="footer-logo" alt="SilentPrint" loading="lazy">
+                        <img src="<?= $basePath ?>/img/logo.png" class="footer-logo" alt="SilentPrint" loading="lazy">
                     </div>
                     <p class="small text-muted">SilentPrint is a leading online printing marketplace specializing in high-quality business and marketing materials.</p>
                     <div class="d-flex gap-3 h4 mt-4">
@@ -64,6 +64,6 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="<?= $basePath ?>/js/script.js"></script>
 </body>
 </html>

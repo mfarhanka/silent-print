@@ -1,4 +1,11 @@
-<?php include 'header.php'; ?>
+<?php
+if (!defined('APP_BOOTSTRAPPED')) {
+    header('Location: ../../products/business-card/');
+    exit;
+}
+
+include dirname(__DIR__, 2) . '/includes/header.php';
+?>
 
 <!-- Business Card Customization Page -->
 <section class="py-5">
@@ -103,4 +110,4 @@ document.getElementById('finish').addEventListener('change', calculatePrice);
 document.getElementById('corner').addEventListener('change', calculatePrice);
 </script>
 
-<?php include 'footer.php'; ?>
+<?php include dirname(__DIR__, 2) . '/includes/footer.php'; ?>
