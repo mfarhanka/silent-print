@@ -42,6 +42,13 @@ $routes = [
 	'products/business-card' => __DIR__ . '/pages/products/business-card.php',
 ];
 
+$currentNav = '';
+if ($normalizedPath === '') {
+	$currentNav = 'home';
+} elseif (str_starts_with($normalizedPath, 'products')) {
+	$currentNav = 'products';
+}
+
 if (!array_key_exists($normalizedPath, $routes)) {
 	http_response_code(404);
 	include __DIR__ . '/pages/404.php';
