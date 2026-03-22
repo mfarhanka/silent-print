@@ -21,7 +21,7 @@ include dirname(__DIR__) . '/includes/header.php';
     </section>
 
     <!-- Quick Info Grid -->
-    <section class="py-4 border-bottom">
+    <section id="latest-features" class="py-4 border-bottom scroll-offset">
         <div class="container">
             <div class="row text-center g-4">
                 <div class="col-6 col-md-3">
@@ -165,8 +165,42 @@ include dirname(__DIR__) . '/includes/header.php';
         </div>
     </section>
 
+    <!-- Process Section -->
+    <section id="process" class="py-5 bg-white scroll-offset">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h6 class="text-primary fw-bold">PROCESS</h6>
+                <h2 class="fw-bold">How Your Order Moves</h2>
+                <p class="text-muted mb-0">A simple three-step flow from request to delivery.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="process-card h-100">
+                        <span class="process-step">01</span>
+                        <h5 class="fw-bold mt-4">Choose Your Product</h5>
+                        <p class="text-muted mb-0">Browse the catalog, compare options, and pick the print format that matches your campaign or event.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="process-card h-100">
+                        <span class="process-step">02</span>
+                        <h5 class="fw-bold mt-4">Customize And Confirm</h5>
+                        <p class="text-muted mb-0">Set your paper, quantity, and finishing, then upload artwork or submit your request for review.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="process-card h-100">
+                        <span class="process-step">03</span>
+                        <h5 class="fw-bold mt-4">Print And Deliver</h5>
+                        <p class="text-muted mb-0">We process the order, run production checks, and ship the finished materials to your doorstep.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Member Privilege -->
-    <section class="member-privilege text-center">
+    <section id="packages" class="member-privilege text-center scroll-offset">
         <div class="container">
             <h2 class="fw-bold mb-4">MEMBER PRIVILEGE PLAN</h2>
             <div class="row justify-content-center g-4">
