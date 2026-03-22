@@ -72,7 +72,7 @@ include dirname(__DIR__) . '/includes/header.php';
                     <div class="card p-4 h-100 bg-light border-0">
                         <h5 class="fw-bold">Can't find what you want?</h5>
                         <p class="small text-muted">Specializing in custom orders for bulk printing. Contact our sales team for a custom quote.</p>
-                        <button class="btn btn-primary rounded-pill btn-sm w-50">GET QUOTE</button>
+                        <a href="<?= $basePath ?>/quote/" class="btn btn-primary rounded-pill btn-sm w-50">GET QUOTE</a>
                         <img src="https://via.placeholder.com/150x150/ffffff/000000?text=Help+Icon" class="mt-auto opacity-50" style="width: 100px;">
                     </div>
                 </div>
@@ -313,40 +313,48 @@ include dirname(__DIR__) . '/includes/header.php';
             <h6 class="text-primary fw-bold mb-4">BLOG</h6>
             <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="<?= $basePath ?>/img/blog/guides.png" class="card-img-top blog-image" alt="Guides" loading="lazy">
-                        <div class="card-body">
-                            <small class="text-primary">Guides</small>
-                            <h6 class="fw-bold mt-2">Services & Features Update</h6>
+                    <a href="<?= $basePath ?>/blog/services-features-update/" class="text-decoration-none text-reset d-block">
+                        <div class="card border-0 text-start shadow-sm h-100 blog-card-link">
+                            <img src="<?= $basePath ?>/img/blog/guides.png" class="card-img-top blog-image" alt="Guides" loading="lazy">
+                            <div class="card-body">
+                                <small class="text-primary">Guides</small>
+                                <h6 class="fw-bold mt-2">Services & Features Update</h6>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="<?= $basePath ?>/img/blog/shipping.png" class="card-img-top blog-image" alt="Shipping" loading="lazy">
-                        <div class="card-body">
-                            <small class="text-primary">Shipping</small>
-                            <h6 class="fw-bold mt-2">Logistics Partners Worldwide</h6>
+                    <a href="<?= $basePath ?>/blog/logistics-partners-worldwide/" class="text-decoration-none text-reset d-block">
+                        <div class="card border-0 text-start shadow-sm h-100 blog-card-link">
+                            <img src="<?= $basePath ?>/img/blog/shipping.png" class="card-img-top blog-image" alt="Shipping" loading="lazy">
+                            <div class="card-body">
+                                <small class="text-primary">Shipping</small>
+                                <h6 class="fw-bold mt-2">Logistics Partners Worldwide</h6>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="<?= $basePath ?>/img/blog/products.png" class="card-img-top blog-image" alt="Products" loading="lazy">
-                        <div class="card-body">
-                            <small class="text-primary">Products</small>
-                            <h6 class="fw-bold mt-2">Comprehensive Signage Guide</h6>
+                    <a href="<?= $basePath ?>/blog/comprehensive-signage-guide/" class="text-decoration-none text-reset d-block">
+                        <div class="card border-0 text-start shadow-sm h-100 blog-card-link">
+                            <img src="<?= $basePath ?>/img/blog/products.png" class="card-img-top blog-image" alt="Products" loading="lazy">
+                            <div class="card-body">
+                                <small class="text-primary">Products</small>
+                                <h6 class="fw-bold mt-2">Comprehensive Signage Guide</h6>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 <div class="col-md-3">
-                    <div class="card border-0 text-start shadow-sm h-100">
-                        <img src="<?= $basePath ?>/img/blog/trends.png" class="card-img-top blog-image" alt="Trends" loading="lazy">
-                        <div class="card-body">
-                            <small class="text-primary">Trends</small>
-                            <h6 class="fw-bold mt-2">Marketing Material Success</h6>
+                    <a href="<?= $basePath ?>/blog/marketing-material-success/" class="text-decoration-none text-reset d-block">
+                        <div class="card border-0 text-start shadow-sm h-100 blog-card-link">
+                            <img src="<?= $basePath ?>/img/blog/trends.png" class="card-img-top blog-image" alt="Trends" loading="lazy">
+                            <div class="card-body">
+                                <small class="text-primary">Trends</small>
+                                <h6 class="fw-bold mt-2">Marketing Material Success</h6>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
