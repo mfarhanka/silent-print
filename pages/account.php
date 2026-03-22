@@ -57,6 +57,9 @@ include dirname(__DIR__) . '/includes/header.php';
                 <div class="content-card shadow-none border-0 bg-light">
                     <h5 class="fw-bold mb-3">Quick actions</h5>
                     <div class="d-grid gap-3">
+                        <?php if (authIsAdmin($currentUser)): ?>
+                            <a href="<?= $basePath ?>/admin/" class="btn btn-dark rounded-pill">Open Admin Dashboard</a>
+                        <?php endif; ?>
                         <a href="<?= $basePath ?>/products/" class="btn btn-primary rounded-pill">Browse Products</a>
                         <a href="<?= $basePath ?>/quote/" class="btn btn-outline-primary rounded-pill">Request Quote</a>
                     </div>

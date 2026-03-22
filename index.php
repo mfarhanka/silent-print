@@ -1,8 +1,11 @@
 <?php
 define('APP_BOOTSTRAPPED', true);
 
-session_start();
-require __DIR__ . '/includes/auth.php';
+if (session_status() !== PHP_SESSION_ACTIVE) {
+	session_start();
+}
+
+require_once __DIR__ . '/includes/auth.php';
 
 $basePath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
 if ($basePath === '/' || $basePath === '\\') {
@@ -69,6 +72,9 @@ $routes = [
 	],
 	'account' => [
 		'file' => __DIR__ . '/pages/account.php',
+	],
+	'admin' => [
+		'file' => __DIR__ . '/pages/admin.php',
 	],
 	'logout' => [
 		'file' => __DIR__ . '/pages/logout.php',

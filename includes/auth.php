@@ -2,9 +2,14 @@
 
 require_once __DIR__ . '/database.php';
 
+function authNormalizeEmail(string $email): string
+{
+    return strtolower(trim($email));
+}
+
 function authFindUserByEmail(string $email): ?array
 {
-    $normalizedEmail = strtolower(trim($email));
+    $normalizedEmail = authNormalizeEmail($email);
     $connection = dbConnection();
     $statement = $connection->prepare('SELECT first_name, last_name, email, password_hash, created_at FROM users WHERE email = ? LIMIT 1');
     $statement->bind_param('s', $normalizedEmail);
@@ -48,7 +53,7 @@ function authCreateUser(array $data): array
     $user = [
         'first_name' => trim($data['first_name']),
         'last_name' => trim($data['last_name']),
-        'email' => strtolower(trim($data['email'])),
+        'email' => authNormalizeEmail($data['email']),
         'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
         'created_at' => date('c'),
     ];
@@ -65,7 +70,7 @@ function authCreateUser(array $data): array
 
 function authUpdateUserPassword(string $email, string $password): void
 {
-    $normalizedEmail = strtolower(trim($email));
+    $normalizedEmail = authNormalizeEmail($email);
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
     $connection = dbConnection();
     $statement = $connection->prepare('UPDATE users SET password_hash = ? WHERE email = ?');
@@ -81,6 +86,49 @@ function authFullName(?array $user): string
     }
 
     return trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
+}
+
+function authAdminEmails(): array
+{
+    static $emails;
+
+    if (is_array($emails)) {
+        return $emails;
+    }
+
+    $configuredEmails = preg_split('/[;,\s]+/', (string) (getenv('SILENT_PRINT_ADMIN_EMAILS') ?: ''));
+    $normalizedEmails = [];
+
+    foreach ($configuredEmails as $configuredEmail) {
+        $email = authNormalizeEmail((string) $configuredEmail);
+        if ($email !== '') {
+            $normalizedEmails[$email] = $email;
+        }
+    }
+
+    if ($normalizedEmails !== []) {
+        $emails = array_values($normalizedEmails);
+
+        return $emails;
+    }
+
+    $connection = dbConnection();
+    $result = $connection->query('SELECT email FROM users ORDER BY created_at ASC, id ASC LIMIT 1');
+    $row = $result ? $result->fetch_assoc() : null;
+    $fallbackEmail = authNormalizeEmail((string) ($row['email'] ?? ''));
+
+    $emails = $fallbackEmail !== '' ? [$fallbackEmail] : [];
+
+    return $emails;
+}
+
+function authIsAdmin(?array $user): bool
+{
+    if (!$user || empty($user['email'])) {
+        return false;
+    }
+
+    return in_array(authNormalizeEmail((string) $user['email']), authAdminEmails(), true);
 }
 
 function authCsrfToken(): string
@@ -123,6 +171,16 @@ function authRequireUser(?array $currentUser, string $basePath): void
     }
 }
 
+function authRequireAdmin(?array $currentUser, string $basePath): void
+{
+    authRequireUser($currentUser, $basePath);
+
+    if (!authIsAdmin($currentUser)) {
+        authFlash('danger', 'Admin access is restricted to approved accounts.');
+        authRedirect($basePath, '/account/');
+    }
+}
+
 function authPurgeExpiredPasswordResets(): void
 {
     $connection = dbConnection();
@@ -133,7 +191,7 @@ function authCreatePasswordReset(string $email): string
 {
     authPurgeExpiredPasswordResets();
 
-    $normalizedEmail = strtolower(trim($email));
+    $normalizedEmail = authNormalizeEmail($email);
     $token = bin2hex(random_bytes(32));
     $tokenHash = hash('sha256', $token);
     $connection = dbConnection();

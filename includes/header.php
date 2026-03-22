@@ -43,6 +43,9 @@
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button">MYR</button>
                     </div>
                     <?php if (!empty($currentUser)): ?>
+                        <?php if (authIsAdmin($currentUser)): ?>
+                            <a href="<?= $basePath ?>/admin/" class="btn btn-light btn-sm rounded-pill px-3">Admin</a>
+                        <?php endif; ?>
                         <a href="<?= $basePath ?>/account/" class="btn btn-outline-primary btn-sm rounded-pill px-3"><?= htmlspecialchars(authFullName($currentUser) ?: 'My Account') ?></a>
                         <a href="<?= $basePath ?>/logout/" class="btn btn-primary btn-sm rounded-pill px-3">Log Out</a>
                     <?php else: ?>
