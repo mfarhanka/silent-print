@@ -42,7 +42,7 @@
                     <div class="dropdown d-none d-md-block">
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button">MYR</button>
                     </div>
-                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</button>
+                    <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</a>
                     <button class="btn btn-primary btn-sm rounded-pill px-3">Sign Up</button>
                 </div>
 

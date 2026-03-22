@@ -221,6 +221,53 @@ html {
     margin-top: 2px;
 }
 
+.auth-shell {
+    min-height: calc(100vh - 220px);
+    display: flex;
+    align-items: center;
+    padding: 72px 0;
+    background:
+        radial-gradient(circle at top left, rgba(0, 123, 255, 0.14), transparent 30%),
+        linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+}
+
+.auth-panel {
+    background: #fff;
+    border: 1px solid rgba(0, 51, 102, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(0, 51, 102, 0.08);
+    overflow: hidden;
+}
+
+.auth-aside {
+    height: 100%;
+    padding: 40px;
+    background: linear-gradient(160deg, #003366 0%, #007bff 100%);
+    color: #fff;
+}
+
+.auth-form-wrap {
+    padding: 40px;
+}
+
+.auth-input {
+    border-radius: 14px;
+    padding: 12px 14px;
+    border: 1px solid rgba(0, 51, 102, 0.12);
+}
+
+.auth-input:focus {
+    border-color: rgba(0, 123, 255, 0.45);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.12);
+}
+
+@media (max-width: 767.98px) {
+    .auth-aside,
+    .auth-form-wrap {
+        padding: 28px 24px;
+    }
+}
+
 @media (max-width: 767.98px) {
     .content-card {
         padding: 24px;

@@ -52,6 +52,9 @@ $routes = [
 	'quote' => [
 		'file' => __DIR__ . '/pages/quote.php',
 	],
+	'login' => [
+		'file' => __DIR__ . '/pages/login.php',
+	],
 	'blog/services-features-update' => [
 		'file' => __DIR__ . '/pages/blog/article.php',
 		'article' => [
