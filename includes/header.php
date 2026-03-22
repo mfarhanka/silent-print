@@ -42,8 +42,13 @@
                     <div class="dropdown d-none d-md-block">
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button">MYR</button>
                     </div>
-                    <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</a>
-                    <a href="<?= $basePath ?>/signup/" class="btn btn-primary btn-sm rounded-pill px-3">Sign Up</a>
+                    <?php if (!empty($currentUser)): ?>
+                        <a href="<?= $basePath ?>/account/" class="btn btn-outline-primary btn-sm rounded-pill px-3"><?= htmlspecialchars(authFullName($currentUser) ?: 'My Account') ?></a>
+                        <a href="<?= $basePath ?>/logout/" class="btn btn-primary btn-sm rounded-pill px-3">Log Out</a>
+                    <?php else: ?>
+                        <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</a>
+                        <a href="<?= $basePath ?>/signup/" class="btn btn-primary btn-sm rounded-pill px-3">Sign Up</a>
+                    <?php endif; ?>
                 </div>
 
                 <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

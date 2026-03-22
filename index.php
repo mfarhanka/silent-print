@@ -1,6 +1,9 @@
 <?php
 define('APP_BOOTSTRAPPED', true);
 
+session_start();
+require __DIR__ . '/includes/auth.php';
+
 $basePath = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
 if ($basePath === '/' || $basePath === '\\') {
 	$basePath = '';
@@ -57,6 +60,12 @@ $routes = [
 	],
 	'signup' => [
 		'file' => __DIR__ . '/pages/signup.php',
+	],
+	'account' => [
+		'file' => __DIR__ . '/pages/account.php',
+	],
+	'logout' => [
+		'file' => __DIR__ . '/pages/logout.php',
 	],
 	'blog/services-features-update' => [
 		'file' => __DIR__ . '/pages/blog/article.php',
@@ -165,5 +174,6 @@ if (!array_key_exists($normalizedPath, $routes)) {
 $route = $routes[$normalizedPath];
 $currentNav = $route['currentNav'] ?? '';
 $article = $route['article'] ?? null;
+$currentUser = authCurrentUser();
 
 include $route['file'];

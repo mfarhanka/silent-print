@@ -4,6 +4,29 @@ if (!defined('APP_BOOTSTRAPPED')) {
     exit;
 }
 
+if (!empty($currentUser)) {
+    header('Location: ' . $basePath . '/account/');
+    exit;
+}
+
+$loginError = '';
+$loginEmail = trim($_POST['email'] ?? '');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $password = $_POST['password'] ?? '';
+    $user = authFindUserByEmail($loginEmail);
+
+    if ($loginEmail === '' || $password === '') {
+        $loginError = 'Email and password are required.';
+    } elseif (!$user || !password_verify($password, $user['password_hash'] ?? '')) {
+        $loginError = 'The email or password is incorrect.';
+    } else {
+        authLoginUser($user);
+        header('Location: ' . $basePath . '/account/');
+        exit;
+    }
+}
+
 include dirname(__DIR__) . '/includes/header.php';
 ?>
 
@@ -34,10 +57,13 @@ include dirname(__DIR__) . '/includes/header.php';
                             <div class="auth-form-wrap">
                                 <h2 class="fw-bold mb-2">Log In</h2>
                                 <p class="text-muted mb-4">Enter your email and password to access your account.</p>
-                                <form action="#" method="post">
+                                <?php if ($loginError !== ''): ?>
+                                    <div class="alert alert-danger auth-alert" role="alert"><?= htmlspecialchars($loginError) ?></div>
+                                <?php endif; ?>
+                                <form action="" method="post" novalidate>
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email address</label>
-                                        <input type="email" class="form-control auth-input" id="email" name="email" placeholder="name@company.com" required>
+                                        <input type="email" class="form-control auth-input" id="email" name="email" placeholder="name@company.com" value="<?= htmlspecialchars($loginEmail) ?>" required>
                                     </div>
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -59,7 +85,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     </div>
                                 </form>
                                 <p class="small text-muted mt-4 mb-2">New here? <a href="<?= $basePath ?>/signup/" class="text-decoration-none">Create an account</a>.</p>
-                                <p class="small text-muted mb-0">This is currently a front-end login page. If you want, the next step is to connect it to a real PHP session-based authentication flow.</p>
+                                <p class="small text-muted mb-0">This login now uses local PHP session authentication backed by the workspace data store.</p>
                             </div>
                         </div>
                     </div>

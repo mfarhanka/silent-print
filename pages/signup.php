@@ -4,6 +4,59 @@ if (!defined('APP_BOOTSTRAPPED')) {
     exit;
 }
 
+if (!empty($currentUser)) {
+    header('Location: ' . $basePath . '/account/');
+    exit;
+}
+
+$signupErrors = [];
+$signupValues = [
+    'firstName' => trim($_POST['firstName'] ?? ''),
+    'lastName' => trim($_POST['lastName'] ?? ''),
+    'email' => trim($_POST['email'] ?? ''),
+];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirmPassword'] ?? '';
+    $agreeTerms = $_POST['agreeTerms'] ?? '';
+
+    if ($signupValues['firstName'] === '' || $signupValues['lastName'] === '') {
+        $signupErrors[] = 'First name and last name are required.';
+    }
+
+    if ($signupValues['email'] === '' || !filter_var($signupValues['email'], FILTER_VALIDATE_EMAIL)) {
+        $signupErrors[] = 'A valid email address is required.';
+    } elseif (authFindUserByEmail($signupValues['email'])) {
+        $signupErrors[] = 'An account with that email already exists.';
+    }
+
+    if (strlen($password) < 8) {
+        $signupErrors[] = 'Password must be at least 8 characters long.';
+    }
+
+    if ($password !== $confirmPassword) {
+        $signupErrors[] = 'Password confirmation does not match.';
+    }
+
+    if ($agreeTerms !== '1') {
+        $signupErrors[] = 'You must agree to the terms to create an account.';
+    }
+
+    if ($signupErrors === []) {
+        $user = authCreateUser([
+            'first_name' => $signupValues['firstName'],
+            'last_name' => $signupValues['lastName'],
+            'email' => $signupValues['email'],
+            'password' => $password,
+        ]);
+
+        authLoginUser($user);
+        header('Location: ' . $basePath . '/account/');
+        exit;
+    }
+}
+
 include dirname(__DIR__) . '/includes/header.php';
 ?>
 
@@ -34,19 +87,28 @@ include dirname(__DIR__) . '/includes/header.php';
                             <div class="auth-form-wrap">
                                 <h2 class="fw-bold mb-2">Sign Up</h2>
                                 <p class="text-muted mb-4">Create your account with your basic details and a secure password.</p>
-                                <form action="#" method="post">
+                                <?php if ($signupErrors !== []): ?>
+                                    <div class="alert alert-danger auth-alert" role="alert">
+                                        <ul class="mb-0 ps-3">
+                                            <?php foreach ($signupErrors as $signupError): ?>
+                                                <li><?= htmlspecialchars($signupError) ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <?php endif; ?>
+                                <form action="" method="post" novalidate>
                                     <div class="row g-3">
                                         <div class="col-md-6">
                                             <label for="firstName" class="form-label">First name</label>
-                                            <input type="text" class="form-control auth-input" id="firstName" name="firstName" placeholder="Aina" required>
+                                            <input type="text" class="form-control auth-input" id="firstName" name="firstName" placeholder="Aina" value="<?= htmlspecialchars($signupValues['firstName']) ?>" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="lastName" class="form-label">Last name</label>
-                                            <input type="text" class="form-control auth-input" id="lastName" name="lastName" placeholder="Rahman" required>
+                                            <input type="text" class="form-control auth-input" id="lastName" name="lastName" placeholder="Rahman" value="<?= htmlspecialchars($signupValues['lastName']) ?>" required>
                                         </div>
                                         <div class="col-12">
                                             <label for="signupEmail" class="form-label">Email address</label>
-                                            <input type="email" class="form-control auth-input" id="signupEmail" name="email" placeholder="name@company.com" required>
+                                            <input type="email" class="form-control auth-input" id="signupEmail" name="email" placeholder="name@company.com" value="<?= htmlspecialchars($signupValues['email']) ?>" required>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="signupPassword" class="form-label">Password</label>
@@ -58,7 +120,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                         </div>
                                     </div>
                                     <div class="form-check mt-4 mb-4">
-                                        <input class="form-check-input" type="checkbox" value="1" id="agreeTerms" name="agreeTerms" required>
+                                        <input class="form-check-input" type="checkbox" value="1" id="agreeTerms" name="agreeTerms" <?= (($_POST['agreeTerms'] ?? '') === '1') ? 'checked' : '' ?> required>
                                         <label class="form-check-label" for="agreeTerms">I agree to the terms of service and privacy policy.</label>
                                     </div>
                                     <div class="d-grid gap-3">
@@ -67,7 +129,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     </div>
                                 </form>
                                 <p class="small text-muted mt-4 mb-2">Already have an account? <a href="<?= $basePath ?>/login/" class="text-decoration-none">Log in here</a>.</p>
-                                <p class="small text-muted mb-0">This is currently a front-end sign-up page. If you want, the next step is to add real account creation and validation.</p>
+                                <p class="small text-muted mb-0">This sign-up now creates a local account and signs the user in immediately after registration.</p>
                             </div>
                         </div>
                     </div>
