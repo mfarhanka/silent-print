@@ -44,7 +44,7 @@ $routes = [
 
 if (!array_key_exists($normalizedPath, $routes)) {
 	http_response_code(404);
-	echo 'Page not found';
+	include __DIR__ . '/pages/404.php';
 	exit;
 }
 
