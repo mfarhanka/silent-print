@@ -4,6 +4,8 @@ if (!defined('APP_BOOTSTRAPPED')) {
     exit;
 }
 
+require_once dirname(__DIR__) . '/includes/auth.php';
+
+authRequireUser($currentUser ?? null, $basePath);
 authLogoutUser();
-header('Location: ' . $basePath . '/');
-exit;
+authRedirect($basePath, '/');

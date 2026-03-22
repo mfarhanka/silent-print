@@ -123,3 +123,23 @@ function authVerifyCsrfToken(?string $token): bool
 
     return hash_equals($sessionToken, $token);
 }
+
+function authRedirect(string $basePath, string $path): void
+{
+    header('Location: ' . $basePath . $path);
+    exit;
+}
+
+function authRequireGuest(?array $currentUser, string $basePath): void
+{
+    if (!empty($currentUser)) {
+        authRedirect($basePath, '/account/');
+    }
+}
+
+function authRequireUser(?array $currentUser, string $basePath): void
+{
+    if (empty($currentUser)) {
+        authRedirect($basePath, '/login/');
+    }
+}

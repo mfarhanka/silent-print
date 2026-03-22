@@ -4,10 +4,9 @@ if (!defined('APP_BOOTSTRAPPED')) {
     exit;
 }
 
-if (empty($currentUser)) {
-    header('Location: ' . $basePath . '/login/');
-    exit;
-}
+require_once dirname(__DIR__) . '/includes/auth.php';
+
+authRequireUser($currentUser ?? null, $basePath);
 
 include dirname(__DIR__) . '/includes/header.php';
 ?>

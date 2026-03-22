@@ -4,10 +4,9 @@ if (!defined('APP_BOOTSTRAPPED')) {
     exit;
 }
 
-if (!empty($currentUser)) {
-    header('Location: ' . $basePath . '/account/');
-    exit;
-}
+require_once dirname(__DIR__) . '/includes/auth.php';
+
+authRequireGuest($currentUser ?? null, $basePath);
 
 $loginError = '';
 $loginEmail = trim($_POST['email'] ?? '');
@@ -25,8 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $loginError = 'The email or password is incorrect.';
     } else {
         authLoginUser($user);
-        header('Location: ' . $basePath . '/account/');
-        exit;
+        authRedirect($basePath, '/account/');
     }
 }
 
