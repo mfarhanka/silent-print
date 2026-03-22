@@ -15,10 +15,10 @@
                     <label for="paperType" class="form-label">Paper Type</label>
                     <select class="form-select" id="paperType" name="paperType" required>
                         <option value="">Select paper type</option>
-                        <option value="matte">Matte</option>
-                        <option value="glossy">Glossy</option>
-                        <option value="textured">Textured</option>
-                        <option value="recycled">Recycled</option>
+                        <option value="matte">Matte (from MYR 30)</option>
+                        <option value="glossy">Glossy (from MYR 35)</option>
+                        <option value="textured">Textured (from MYR 40)</option>
+                        <option value="recycled">Recycled (from MYR 32)</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -26,9 +26,9 @@
                     <select class="form-select" id="quantity" name="quantity" required>
                         <option value="">Select quantity</option>
                         <option value="100">100</option>
-                        <option value="200">200</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
+                        <option value="200">200 (+MYR 25)</option>
+                        <option value="500">500 (+MYR 90)</option>
+                        <option value="1000">1000 (+MYR 170)</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -36,8 +36,8 @@
                     <select class="form-select" id="finish" name="finish" required>
                         <option value="">Select finish</option>
                         <option value="standard">Standard</option>
-                        <option value="laminated">Laminated</option>
-                        <option value="spotUV">Spot UV</option>
+                        <option value="laminated">Laminated (+MYR 20)</option>
+                        <option value="spotUV">Spot UV (+MYR 40)</option>
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -45,7 +45,7 @@
                     <select class="form-select" id="corner" name="corner" required>
                         <option value="">Select corner style</option>
                         <option value="square">Square</option>
-                        <option value="rounded">Rounded</option>
+                        <option value="rounded">Rounded (+MYR 10)</option>
                     </select>
                 </div>
                 <div class="col-12">
