@@ -55,6 +55,9 @@ $routes = [
 	'login' => [
 		'file' => __DIR__ . '/pages/login.php',
 	],
+	'signup' => [
+		'file' => __DIR__ . '/pages/signup.php',
+	],
 	'blog/services-features-update' => [
 		'file' => __DIR__ . '/pages/blog/article.php',
 		'article' => [

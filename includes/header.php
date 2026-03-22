@@ -43,7 +43,7 @@
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button">MYR</button>
                     </div>
                     <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</a>
-                    <button class="btn btn-primary btn-sm rounded-pill px-3">Sign Up</button>
+                    <a href="<?= $basePath ?>/signup/" class="btn btn-primary btn-sm rounded-pill px-3">Sign Up</a>
                 </div>
 
                 <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

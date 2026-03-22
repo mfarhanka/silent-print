@@ -58,7 +58,8 @@ include dirname(__DIR__) . '/includes/header.php';
                                         <button type="button" class="btn btn-outline-secondary rounded-pill py-2">Continue with Google</button>
                                     </div>
                                 </form>
-                                <p class="small text-muted mt-4 mb-0">This is currently a front-end login page. If you want, the next step is to connect it to a real PHP session-based authentication flow.</p>
+                                <p class="small text-muted mt-4 mb-2">New here? <a href="<?= $basePath ?>/signup/" class="text-decoration-none">Create an account</a>.</p>
+                                <p class="small text-muted mb-0">This is currently a front-end login page. If you want, the next step is to connect it to a real PHP session-based authentication flow.</p>
                             </div>
                         </div>
                     </div>
