@@ -38,6 +38,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Business Cards</h5>
                         <p class="card-text">Professional business cards to make a lasting impression.</p>
+                        <a href="business-card.php" class="btn btn-outline-primary btn-sm mt-2 w-100">Customize & Order</a>
                     </div>
                 </div>
             </div>
