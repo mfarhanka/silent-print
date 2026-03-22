@@ -10,7 +10,6 @@ authRequireGuest($currentUser ?? null, $basePath);
 $token = trim($_GET['token'] ?? ($_POST['token'] ?? ''));
 $resetRecord = $token !== '' ? authFindPasswordReset($token) : null;
 $resetError = '';
-$resetSuccess = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrfToken = $_POST['csrf_token'] ?? '';
@@ -28,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!authConsumePasswordReset($token, $password)) {
         $resetError = 'This reset link is invalid or has expired.';
     } else {
-        $resetSuccess = true;
+        authFlash('success', 'Your password has been updated. You can now log in.');
+        authRedirect($basePath, '/login/');
     }
 }
 
@@ -49,11 +49,7 @@ include dirname(__DIR__) . '/includes/header.php';
                             <div class="alert alert-danger auth-alert" role="alert"><?= htmlspecialchars($resetError) ?></div>
                         <?php endif; ?>
 
-                        <?php if ($resetSuccess): ?>
-                            <div class="alert alert-success auth-alert" role="alert">
-                                Your password has been updated. You can now <a href="<?= $basePath ?>/login/" class="alert-link">log in</a>.
-                            </div>
-                        <?php elseif ($resetRecord): ?>
+                        <?php if ($resetRecord): ?>
                             <form action="" method="post" novalidate>
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
                                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">

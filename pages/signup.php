@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         authLoginUser($user);
+        authFlash('success', 'Your account has been created. Welcome to SilentPrint.');
         authRedirect($basePath, '/account/');
     }
 }

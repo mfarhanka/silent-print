@@ -59,3 +59,11 @@
             </div>
         </nav>
     </header>
+
+    <?php if (!empty($flash['message'])): ?>
+        <div class="container mt-3">
+            <div class="alert alert-<?= htmlspecialchars($flash['type'] ?? 'info') ?> auth-alert mb-0" role="alert">
+                <?= htmlspecialchars($flash['message']) ?>
+            </div>
+        </div>
+    <?php endif; ?>

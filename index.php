@@ -181,5 +181,6 @@ $route = $routes[$normalizedPath];
 $currentNav = $route['currentNav'] ?? '';
 $article = $route['article'] ?? null;
 $currentUser = authCurrentUser();
+$flash = authPullFlash();
 
 include $route['file'];

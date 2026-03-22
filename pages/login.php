@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $loginError = 'The email or password is incorrect.';
     } else {
         authLoginUser($user);
+        authFlash('success', 'You are now logged in.');
         authRedirect($basePath, '/account/');
     }
 }
