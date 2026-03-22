@@ -1,93 +1,19 @@
 <?php
 
-function authUsersFilePath(): string
-{
-    return dirname(__DIR__) . '/data/users.json';
-}
-
-function authEnsureUsersFile(): void
-{
-    $filePath = authUsersFilePath();
-    authEnsureDataDirectory();
-
-    if (!file_exists($filePath)) {
-        file_put_contents($filePath, json_encode([], JSON_PRETTY_PRINT));
-    }
-}
-
-function authEnsureDataDirectory(): void
-{
-    $directory = dirname(authUsersFilePath());
-
-    if (!is_dir($directory)) {
-        mkdir($directory, 0775, true);
-    }
-}
-
-function authLoadUsers(): array
-{
-    authEnsureUsersFile();
-
-    $content = file_get_contents(authUsersFilePath());
-    if ($content === false || trim($content) === '') {
-        return [];
-    }
-
-    $users = json_decode($content, true);
-    return is_array($users) ? $users : [];
-}
-
-function authSaveUsers(array $users): void
-{
-    authEnsureUsersFile();
-    file_put_contents(authUsersFilePath(), json_encode(array_values($users), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-}
-
-function authPasswordResetsFilePath(): string
-{
-    return dirname(__DIR__) . '/data/password_resets.json';
-}
-
-function authEnsurePasswordResetsFile(): void
-{
-    $filePath = authPasswordResetsFilePath();
-    authEnsureDataDirectory();
-
-    if (!file_exists($filePath)) {
-        file_put_contents($filePath, json_encode([], JSON_PRETTY_PRINT));
-    }
-}
-
-function authLoadPasswordResets(): array
-{
-    authEnsurePasswordResetsFile();
-
-    $content = file_get_contents(authPasswordResetsFilePath());
-    if ($content === false || trim($content) === '') {
-        return [];
-    }
-
-    $resets = json_decode($content, true);
-    return is_array($resets) ? $resets : [];
-}
-
-function authSavePasswordResets(array $resets): void
-{
-    authEnsurePasswordResetsFile();
-    file_put_contents(authPasswordResetsFilePath(), json_encode(array_values($resets), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-}
+require_once __DIR__ . '/database.php';
 
 function authFindUserByEmail(string $email): ?array
 {
     $normalizedEmail = strtolower(trim($email));
+    $connection = dbConnection();
+    $statement = $connection->prepare('SELECT first_name, last_name, email, password_hash, created_at FROM users WHERE email = ? LIMIT 1');
+    $statement->bind_param('s', $normalizedEmail);
+    $statement->execute();
+    $result = $statement->get_result();
+    $user = $result ? $result->fetch_assoc() : null;
+    $statement->close();
 
-    foreach (authLoadUsers() as $user) {
-        if (($user['email'] ?? '') === $normalizedEmail) {
-            return $user;
-        }
-    }
-
-    return null;
+    return is_array($user) ? $user : null;
 }
 
 function authCurrentUser(): ?array
@@ -119,7 +45,6 @@ function authLogoutUser(): void
 
 function authCreateUser(array $data): array
 {
-    $users = authLoadUsers();
     $user = [
         'first_name' => trim($data['first_name']),
         'last_name' => trim($data['last_name']),
@@ -128,8 +53,12 @@ function authCreateUser(array $data): array
         'created_at' => date('c'),
     ];
 
-    $users[] = $user;
-    authSaveUsers($users);
+    $connection = dbConnection();
+    $statement = $connection->prepare('INSERT INTO users (first_name, last_name, email, password_hash, created_at) VALUES (?, ?, ?, ?, ?)');
+    $createdAt = date('Y-m-d H:i:s', strtotime($user['created_at']));
+    $statement->bind_param('sssss', $user['first_name'], $user['last_name'], $user['email'], $user['password_hash'], $createdAt);
+    $statement->execute();
+    $statement->close();
 
     return $user;
 }
@@ -137,16 +66,12 @@ function authCreateUser(array $data): array
 function authUpdateUserPassword(string $email, string $password): void
 {
     $normalizedEmail = strtolower(trim($email));
-    $users = authLoadUsers();
-
-    foreach ($users as &$user) {
-        if (($user['email'] ?? '') === $normalizedEmail) {
-            $user['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
-            break;
-        }
-    }
-
-    authSaveUsers($users);
+    $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+    $connection = dbConnection();
+    $statement = $connection->prepare('UPDATE users SET password_hash = ? WHERE email = ?');
+    $statement->bind_param('ss', $passwordHash, $normalizedEmail);
+    $statement->execute();
+    $statement->close();
 }
 
 function authFullName(?array $user): string
@@ -200,12 +125,8 @@ function authRequireUser(?array $currentUser, string $basePath): void
 
 function authPurgeExpiredPasswordResets(): void
 {
-    $now = time();
-    $resets = array_values(array_filter(authLoadPasswordResets(), function (array $reset) use ($now): bool {
-        return strtotime($reset['expires_at'] ?? '') > $now;
-    }));
-
-    authSavePasswordResets($resets);
+    $connection = dbConnection();
+    $connection->query("DELETE FROM password_resets WHERE expires_at <= NOW()");
 }
 
 function authCreatePasswordReset(string $email): string
@@ -215,18 +136,17 @@ function authCreatePasswordReset(string $email): string
     $normalizedEmail = strtolower(trim($email));
     $token = bin2hex(random_bytes(32));
     $tokenHash = hash('sha256', $token);
-    $resets = array_values(array_filter(authLoadPasswordResets(), function (array $reset) use ($normalizedEmail): bool {
-        return ($reset['email'] ?? '') !== $normalizedEmail;
-    }));
+    $connection = dbConnection();
 
-    $resets[] = [
-        'email' => $normalizedEmail,
-        'token_hash' => $tokenHash,
-        'created_at' => date('c'),
-        'expires_at' => date('c', time() + 3600),
-    ];
+    $deleteStatement = $connection->prepare('DELETE FROM password_resets WHERE email = ?');
+    $deleteStatement->bind_param('s', $normalizedEmail);
+    $deleteStatement->execute();
+    $deleteStatement->close();
 
-    authSavePasswordResets($resets);
+    $insertStatement = $connection->prepare('INSERT INTO password_resets (email, token_hash, created_at, expires_at) VALUES (?, ?, NOW(), DATE_ADD(NOW(), INTERVAL 1 HOUR))');
+    $insertStatement->bind_param('ss', $normalizedEmail, $tokenHash);
+    $insertStatement->execute();
+    $insertStatement->close();
 
     return $token;
 }
@@ -235,14 +155,15 @@ function authFindPasswordReset(string $token): ?array
 {
     authPurgeExpiredPasswordResets();
     $tokenHash = hash('sha256', $token);
+    $connection = dbConnection();
+    $statement = $connection->prepare('SELECT email, token_hash, created_at, expires_at FROM password_resets WHERE token_hash = ? LIMIT 1');
+    $statement->bind_param('s', $tokenHash);
+    $statement->execute();
+    $result = $statement->get_result();
+    $reset = $result ? $result->fetch_assoc() : null;
+    $statement->close();
 
-    foreach (authLoadPasswordResets() as $reset) {
-        if (($reset['token_hash'] ?? '') === $tokenHash) {
-            return $reset;
-        }
-    }
-
-    return null;
+    return is_array($reset) ? $reset : null;
 }
 
 function authConsumePasswordReset(string $token, string $newPassword): bool
@@ -254,10 +175,11 @@ function authConsumePasswordReset(string $token, string $newPassword): bool
 
     authUpdateUserPassword($reset['email'], $newPassword);
     $tokenHash = hash('sha256', $token);
-    $resets = array_values(array_filter(authLoadPasswordResets(), function (array $entry) use ($tokenHash): bool {
-        return ($entry['token_hash'] ?? '') !== $tokenHash;
-    }));
-    authSavePasswordResets($resets);
+    $connection = dbConnection();
+    $statement = $connection->prepare('DELETE FROM password_resets WHERE token_hash = ?');
+    $statement->bind_param('s', $tokenHash);
+    $statement->execute();
+    $statement->close();
 
     return true;
 }
