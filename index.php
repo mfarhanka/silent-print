@@ -58,6 +58,12 @@ $routes = [
 	'login' => [
 		'file' => __DIR__ . '/pages/login.php',
 	],
+	'forgot-password' => [
+		'file' => __DIR__ . '/pages/forgot-password.php',
+	],
+	'reset-password' => [
+		'file' => __DIR__ . '/pages/reset-password.php',
+	],
 	'signup' => [
 		'file' => __DIR__ . '/pages/signup.php',
 	],

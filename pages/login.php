@@ -70,7 +70,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     <div class="mb-3">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <label for="password" class="form-label mb-0">Password</label>
-                                            <a href="<?= $basePath ?>/quote/" class="small text-decoration-none">Need help?</a>
+                                            <a href="<?= $basePath ?>/forgot-password/" class="small text-decoration-none">Need help?</a>
                                         </div>
                                         <input type="password" class="form-control auth-input" id="password" name="password" placeholder="Enter your password" required>
                                     </div>
@@ -79,7 +79,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                             <input class="form-check-input" type="checkbox" value="1" id="rememberMe" name="rememberMe">
                                             <label class="form-check-label" for="rememberMe">Remember me</label>
                                         </div>
-                                        <a href="<?= $basePath ?>/quote/" class="small text-decoration-none">Forgot password?</a>
+                                        <a href="<?= $basePath ?>/forgot-password/" class="small text-decoration-none">Forgot password?</a>
                                     </div>
                                     <div class="d-grid gap-3">
                                         <button type="submit" class="btn btn-primary rounded-pill py-2">Continue</button>
