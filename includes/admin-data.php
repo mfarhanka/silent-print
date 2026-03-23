@@ -123,29 +123,105 @@ function adminSystemStatus(array $databaseConfig): array
 
 function adminTableExists(mysqli $connection, string $tableName): bool
 {
-    $statement = $connection->prepare('SHOW TABLES LIKE ?');
+    $statement = $connection->prepare('SELECT COUNT(*) AS total FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?');
     $statement->bind_param('s', $tableName);
     $statement->execute();
     $result = $statement->get_result();
-    $exists = $result instanceof mysqli_result && $result->num_rows > 0;
+    $row = $result instanceof mysqli_result ? $result->fetch_assoc() : ['total' => 0];
     $statement->close();
 
-    return $exists;
+    return (int) ($row['total'] ?? 0) > 0;
 }
 
 function adminQuoteStatus(mysqli $connection, string $basePath = ''): array
 {
     $quotePageExists = is_file(dirname(__DIR__) . '/pages/quote.php');
     $quoteTableExists = adminTableExists($connection, 'quotes');
+    $totalQuotes = $quoteTableExists ? adminQuoteTotal($connection) : 0;
 
     return [
         'publicRoute' => ($basePath !== '' ? $basePath : '') . '/quote/',
         'quotePageExists' => $quotePageExists,
         'quoteTableExists' => $quoteTableExists,
-        'submissionMode' => $quoteTableExists ? 'Stored submissions available' : 'Informational page only',
-        'storageMode' => $quoteTableExists ? 'MySQL quotes table present' : 'No quotes table detected',
+        'totalQuotes' => $totalQuotes,
+        'submissionMode' => !$quoteTableExists
+            ? 'Informational page only'
+            : ($totalQuotes > 0 ? 'Stored submissions available' : 'Storage provisioned, waiting for intake'),
+        'storageMode' => $quoteTableExists ? 'MySQL quotes table ready' : 'No quotes table detected',
         'nextAction' => $quoteTableExists
-            ? 'Extend the admin page with workflow states, ownership, and response tracking.'
+            ? ($totalQuotes > 0
+                ? 'Extend the admin page with workflow states, ownership, and response tracking.'
+                : 'Connect the public quote page to this table so new requests appear in the admin queue.')
             : 'Add quote submission handling and persist requests before building operational workflow tools.',
     ];
+}
+
+function adminQuoteTotal(mysqli $connection): int
+{
+    return (int) (($connection->query('SELECT COUNT(*) AS total FROM quotes')->fetch_assoc()['total'] ?? 0));
+}
+
+function adminQuoteCountByStatus(mysqli $connection, string $status): int
+{
+    $statement = $connection->prepare('SELECT COUNT(*) AS total FROM quotes WHERE status = ?');
+    $statement->bind_param('s', $status);
+    $statement->execute();
+    $result = $statement->get_result();
+    $row = $result instanceof mysqli_result ? $result->fetch_assoc() : ['total' => 0];
+    $statement->close();
+
+    return (int) ($row['total'] ?? 0);
+}
+
+function adminQuoteActiveCount(mysqli $connection): int
+{
+    $statuses = ['new', 'contacted', 'quoted'];
+    $placeholders = implode(',', array_fill(0, count($statuses), '?'));
+    $statement = $connection->prepare("SELECT COUNT(*) AS total FROM quotes WHERE status IN ({$placeholders})");
+    $statement->bind_param(str_repeat('s', count($statuses)), ...$statuses);
+    $statement->execute();
+    $result = $statement->get_result();
+    $row = $result instanceof mysqli_result ? $result->fetch_assoc() : ['total' => 0];
+    $statement->close();
+
+    return (int) ($row['total'] ?? 0);
+}
+
+function adminRecentQuotes(mysqli $connection, int $limit = 20): array
+{
+    $quotes = [];
+    $limit = max(1, $limit);
+    $result = $connection->query("SELECT id, full_name, email, phone, company, product_name, quantity, status, source, created_at, responded_at FROM quotes ORDER BY created_at DESC, id DESC LIMIT {$limit}");
+
+    if ($result instanceof mysqli_result) {
+        while ($row = $result->fetch_assoc()) {
+            $quotes[] = $row;
+        }
+    }
+
+    return $quotes;
+}
+
+function adminQuoteBadgeClass(string $status): string
+{
+    return match ($status) {
+        'new' => 'is-quote-new',
+        'contacted' => 'is-quote-contacted',
+        'quoted' => 'is-quote-quoted',
+        'won' => 'is-quote-won',
+        'archived' => 'is-quote-archived',
+        default => 'is-user',
+    };
+}
+
+function adminQuoteLabel(string $status): string
+{
+    return match ($status) {
+        'new' => 'New',
+        'contacted' => 'Contacted',
+        'quoted' => 'Quoted',
+        'won' => 'Won',
+        'archived' => 'Archived',
+        default => ucfirst($status),
+    };
 }

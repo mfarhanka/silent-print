@@ -474,6 +474,31 @@ body.admin-shell {
     color: var(--admin-accent-deep);
 }
 
+.admin-badge.is-quote-new {
+    background: rgba(13, 110, 253, 0.12);
+    color: #0a58ca;
+}
+
+.admin-badge.is-quote-contacted {
+    background: rgba(255, 193, 7, 0.18);
+    color: #8a6d00;
+}
+
+.admin-badge.is-quote-quoted {
+    background: rgba(111, 66, 193, 0.16);
+    color: #59359a;
+}
+
+.admin-badge.is-quote-won {
+    background: rgba(25, 135, 84, 0.14);
+    color: #146c43;
+}
+
+.admin-badge.is-quote-archived {
+    background: rgba(108, 117, 125, 0.14);
+    color: #495057;
+}
+
 .admin-badge.is-expired {
     background: rgba(220, 53, 69, 0.12);
     color: #b02a37;

@@ -88,6 +88,28 @@ function dbEnsureSchema(mysqli $connection): void
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
 
+    $connection->query(
+        'CREATE TABLE IF NOT EXISTS quotes (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            full_name VARCHAR(190) NOT NULL,
+            email VARCHAR(190) NOT NULL,
+            phone VARCHAR(50) DEFAULT NULL,
+            company VARCHAR(190) DEFAULT NULL,
+            product_name VARCHAR(190) NOT NULL,
+            quantity INT UNSIGNED DEFAULT NULL,
+            specifications TEXT DEFAULT NULL,
+            needed_by DATE DEFAULT NULL,
+            status VARCHAR(32) NOT NULL DEFAULT "new",
+            source VARCHAR(32) NOT NULL DEFAULT "web",
+            created_at DATETIME NOT NULL,
+            updated_at DATETIME NOT NULL,
+            responded_at DATETIME DEFAULT NULL,
+            INDEX idx_quotes_email (email),
+            INDEX idx_quotes_status (status),
+            INDEX idx_quotes_created_at (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
+    );
+
     dbMigrateLegacyJson($connection);
     $initialized = true;
 }
