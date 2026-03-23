@@ -71,7 +71,10 @@ $databaseName = (string) ($databaseConfig['database'] ?? 'silent_print');
 $legacyUsersJsonExists = is_file(dirname(__DIR__) . '/data/users.json');
 $legacyResetsJsonExists = is_file(dirname(__DIR__) . '/data/password_resets.json');
 
-include dirname(__DIR__) . '/includes/header.php';
+$pageTitle = 'Admin Dashboard | SilentPrint';
+$adminPage = 'dashboard';
+
+include dirname(__DIR__) . '/includes/admin-header.php';
 ?>
 
 <section class="content-hero">
@@ -276,7 +279,7 @@ include dirname(__DIR__) . '/includes/header.php';
                 </div>
                 <form method="get" action="<?= $basePath ?>/admin/" class="admin-search-form">
                     <div class="input-group">
-                        <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" class="form-control auth-input admin-search-input" placeholder="Search by name or email">
+                        <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" class="form-control admin-search-input" placeholder="Search by name or email">
                         <button type="submit" class="btn btn-primary">Search</button>
                         <?php if ($searchQuery !== ''): ?>
                             <a href="<?= $basePath ?>/admin/" class="btn btn-outline-secondary">Clear</a>
@@ -373,4 +376,4 @@ include dirname(__DIR__) . '/includes/header.php';
     </div>
 </section>
 
-<?php include dirname(__DIR__) . '/includes/footer.php'; ?>
+<?php include dirname(__DIR__) . '/includes/admin-footer.php'; ?>
