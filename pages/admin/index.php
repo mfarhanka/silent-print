@@ -1,80 +1,24 @@
 <?php
-if (!defined('APP_BOOTSTRAPPED')) {
-    header('Location: ../admin/');
-    exit;
-}
+require_once dirname(__DIR__, 2) . '/includes/admin-bootstrap.php';
+require_once dirname(__DIR__, 2) . '/includes/admin-data.php';
 
-require_once dirname(__DIR__) . '/includes/auth.php';
-require_once dirname(__DIR__) . '/includes/database.php';
-
-authRequireAdmin($currentUser ?? null, $basePath);
-
-$connection = dbConnection();
-$databaseConfig = dbConfig();
-$searchQuery = trim((string) ($_GET['q'] ?? ''));
-$totalUsers = (int) (($connection->query('SELECT COUNT(*) AS total FROM users')->fetch_assoc()['total'] ?? 0));
-$usersThisWeek = (int) (($connection->query("SELECT COUNT(*) AS total FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)")->fetch_assoc()['total'] ?? 0));
-$usersThisMonth = (int) (($connection->query("SELECT COUNT(*) AS total FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)")->fetch_assoc()['total'] ?? 0));
-$activeResets = (int) (($connection->query('SELECT COUNT(*) AS total FROM password_resets WHERE expires_at > NOW()')->fetch_assoc()['total'] ?? 0));
-$expiredResets = (int) (($connection->query('SELECT COUNT(*) AS total FROM password_resets WHERE expires_at <= NOW()')->fetch_assoc()['total'] ?? 0));
+$connection = adminDbConnection();
+$databaseConfig = adminDatabaseConfig();
+$totalUsers = adminTotalUsers($connection);
+$usersThisWeek = adminUsersThisWeek($connection);
+$usersThisMonth = adminUsersThisMonth($connection);
+$activeResets = adminActiveResets($connection);
+$expiredResets = adminExpiredResets($connection);
 $adminEmails = authAdminEmails();
-$recentUsers = [];
-$directoryUsers = [];
-$recentResets = [];
-$recentUsersResult = $connection->query('SELECT first_name, last_name, email, created_at FROM users ORDER BY created_at DESC, id DESC LIMIT 8');
-
-if ($recentUsersResult instanceof mysqli_result) {
-    while ($row = $recentUsersResult->fetch_assoc()) {
-        $recentUsers[] = $row;
-    }
-}
-
-if ($searchQuery !== '') {
-    $directoryStatement = $connection->prepare('SELECT first_name, last_name, email, created_at FROM users WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ORDER BY created_at DESC, id DESC LIMIT 20');
-    $searchTerm = '%' . $searchQuery . '%';
-    $directoryStatement->bind_param('sss', $searchTerm, $searchTerm, $searchTerm);
-    $directoryStatement->execute();
-    $directoryResult = $directoryStatement->get_result();
-
-    if ($directoryResult instanceof mysqli_result) {
-        while ($row = $directoryResult->fetch_assoc()) {
-            $directoryUsers[] = $row;
-        }
-    }
-
-    $directoryStatement->close();
-} else {
-    $directoryResult = $connection->query('SELECT first_name, last_name, email, created_at FROM users ORDER BY created_at DESC, id DESC LIMIT 20');
-
-    if ($directoryResult instanceof mysqli_result) {
-        while ($row = $directoryResult->fetch_assoc()) {
-            $directoryUsers[] = $row;
-        }
-    }
-}
-
-$recentResetsResult = $connection->query('SELECT email, created_at, expires_at FROM password_resets ORDER BY created_at DESC, id DESC LIMIT 10');
-
-if ($recentResetsResult instanceof mysqli_result) {
-    while ($row = $recentResetsResult->fetch_assoc()) {
-        $recentResets[] = $row;
-    }
-}
-
-$adminPolicy = getenv('SILENT_PRINT_ADMIN_EMAILS')
-    ? 'Admin access is controlled by the SILENT_PRINT_ADMIN_EMAILS environment variable.'
-    : 'Admin access currently falls back to the earliest registered account for local development.';
-
-$authMode = getenv('SILENT_PRINT_ADMIN_EMAILS') ? 'Explicit environment configuration' : 'Local fallback mode';
-$databaseHost = (string) ($databaseConfig['host'] ?? '127.0.0.1');
-$databaseName = (string) ($databaseConfig['database'] ?? 'silent_print');
-$legacyUsersJsonExists = is_file(dirname(__DIR__) . '/data/users.json');
-$legacyResetsJsonExists = is_file(dirname(__DIR__) . '/data/password_resets.json');
+$recentUsers = adminRecentUsers($connection, 8);
+$adminPolicy = adminPolicySummary();
+$authMode = adminAuthMode();
+$systemStatus = adminSystemStatus($databaseConfig);
 
 $pageTitle = 'Admin Dashboard | SilentPrint';
 $adminPage = 'dashboard';
 
-include dirname(__DIR__) . '/includes/admin-header.php';
+include dirname(__DIR__, 2) . '/includes/admin-header.php';
 ?>
 
 <section class="content-hero">
@@ -165,19 +109,19 @@ include dirname(__DIR__) . '/includes/admin-header.php';
                 <div class="admin-kicker">Accounts</div>
                 <h5 class="fw-bold mb-2">Search user directory</h5>
                 <p class="text-muted mb-3">Find accounts by name or email directly from the users table.</p>
-                <a href="#admin-users" class="btn btn-outline-primary rounded-pill">Open User Directory</a>
+                <a href="<?= $basePath ?>/admin/users/" class="btn btn-outline-primary rounded-pill">Open User Directory</a>
             </article>
             <article class="content-card shadow-none border-0 bg-light admin-shortcut-card">
                 <div class="admin-kicker">Security</div>
                 <h5 class="fw-bold mb-2">Review reset activity</h5>
                 <p class="text-muted mb-3">Inspect recent password reset requests and whether each link is still active.</p>
-                <a href="#admin-security" class="btn btn-outline-primary rounded-pill">Open Security Feed</a>
+                <a href="<?= $basePath ?>/admin/security/" class="btn btn-outline-primary rounded-pill">Open Security Feed</a>
             </article>
             <article class="content-card shadow-none border-0 bg-light admin-shortcut-card">
                 <div class="admin-kicker">System</div>
                 <h5 class="fw-bold mb-2">Check app configuration</h5>
                 <p class="text-muted mb-3">See which database is active and how admin access is currently resolved.</p>
-                <a href="#admin-system" class="btn btn-outline-primary rounded-pill">Open System Status</a>
+                <a href="<?= $basePath ?>/admin/system/" class="btn btn-outline-primary rounded-pill">Open System Status</a>
             </article>
         </div>
 
@@ -233,19 +177,19 @@ include dirname(__DIR__) . '/includes/admin-header.php';
                         </div>
                         <div class="admin-system-row">
                             <span class="text-muted">Database host</span>
-                            <strong><?= htmlspecialchars($databaseHost) ?></strong>
+                            <strong><?= htmlspecialchars($systemStatus['databaseHost']) ?></strong>
                         </div>
                         <div class="admin-system-row">
                             <span class="text-muted">Database name</span>
-                            <strong><?= htmlspecialchars($databaseName) ?></strong>
+                            <strong><?= htmlspecialchars($systemStatus['databaseName']) ?></strong>
                         </div>
                         <div class="admin-system-row">
                             <span class="text-muted">Legacy users JSON</span>
-                            <strong><?= $legacyUsersJsonExists ? 'Present' : 'Missing' ?></strong>
+                            <strong><?= $systemStatus['legacyUsersJsonExists'] ? 'Present' : 'Missing' ?></strong>
                         </div>
                         <div class="admin-system-row">
                             <span class="text-muted">Legacy resets JSON</span>
-                            <strong><?= $legacyResetsJsonExists ? 'Present' : 'Missing' ?></strong>
+                            <strong><?= $systemStatus['legacyResetsJsonExists'] ? 'Present' : 'Missing' ?></strong>
                         </div>
                     </div>
                 </div>
@@ -269,111 +213,7 @@ include dirname(__DIR__) . '/includes/admin-header.php';
                 </div>
             </div>
         </div>
-
-        <div class="content-card mb-4" id="admin-users">
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-                <div>
-                    <span class="content-meta mb-3">User Directory</span>
-                    <h5 class="fw-bold mb-2">Customer accounts</h5>
-                    <p class="text-muted mb-0">Search across names and email addresses, then review who has admin access.</p>
-                </div>
-                <form method="get" action="<?= $basePath ?>/admin/" class="admin-search-form">
-                    <div class="input-group">
-                        <input type="text" name="q" value="<?= htmlspecialchars($searchQuery) ?>" class="form-control admin-search-input" placeholder="Search by name or email">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                        <?php if ($searchQuery !== ''): ?>
-                            <a href="<?= $basePath ?>/admin/" class="btn btn-outline-secondary">Clear</a>
-                        <?php endif; ?>
-                    </div>
-                </form>
-            </div>
-
-            <?php if ($directoryUsers === []): ?>
-                <div class="account-stat">
-                    <div class="fw-semibold">No matching accounts</div>
-                    <div class="small text-muted">Try a broader search or remove the filter.</div>
-                </div>
-            <?php else: ?>
-                <div class="admin-table-wrap">
-                    <table class="table admin-table align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Access</th>
-                                <th scope="col">Created</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($directoryUsers as $user): ?>
-                                <?php $isAdminUser = in_array(authNormalizeEmail((string) ($user['email'] ?? '')), $adminEmails, true); ?>
-                                <tr>
-                                    <td>
-                                        <div class="fw-semibold"><?= htmlspecialchars(trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')) ?: 'Unnamed User') ?></div>
-                                    </td>
-                                    <td><?= htmlspecialchars($user['email'] ?? '') ?></td>
-                                    <td>
-                                        <span class="admin-badge <?= $isAdminUser ? 'is-admin' : 'is-user' ?>">
-                                            <?= $isAdminUser ? 'Admin' : 'User' ?>
-                                        </span>
-                                    </td>
-                                    <td><?= htmlspecialchars(date('d M Y, H:i', strtotime($user['created_at'] ?? 'now'))) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </div>
-
-        <div class="content-card" id="admin-security">
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
-                <div>
-                    <span class="content-meta mb-3">Security Feed</span>
-                    <h5 class="fw-bold mb-2">Password reset activity</h5>
-                    <p class="text-muted mb-0">Track which accounts requested reset links and whether those links are still active.</p>
-                </div>
-                <div class="admin-note">
-                    <strong><?= number_format($activeResets) ?></strong> active reset links
-                </div>
-            </div>
-
-            <?php if ($recentResets === []): ?>
-                <div class="account-stat">
-                    <div class="fw-semibold">No reset activity yet</div>
-                    <div class="small text-muted">Reset requests will appear here once the forgot-password flow is used.</div>
-                </div>
-            <?php else: ?>
-                <div class="admin-table-wrap">
-                    <table class="table admin-table align-middle mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">Email</th>
-                                <th scope="col">Requested</th>
-                                <th scope="col">Expires</th>
-                                <th scope="col">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($recentResets as $reset): ?>
-                                <?php $isActiveReset = strtotime((string) ($reset['expires_at'] ?? '')) > time(); ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($reset['email'] ?? '') ?></td>
-                                    <td><?= htmlspecialchars(date('d M Y, H:i', strtotime($reset['created_at'] ?? 'now'))) ?></td>
-                                    <td><?= htmlspecialchars(date('d M Y, H:i', strtotime($reset['expires_at'] ?? 'now'))) ?></td>
-                                    <td>
-                                        <span class="admin-badge <?= $isActiveReset ? 'is-active' : 'is-expired' ?>">
-                                            <?= $isActiveReset ? 'Active' : 'Expired' ?>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php endif; ?>
-        </div>
     </div>
 </section>
 
-<?php include dirname(__DIR__) . '/includes/admin-footer.php'; ?>
+<?php include dirname(__DIR__, 2) . '/includes/admin-footer.php'; ?>

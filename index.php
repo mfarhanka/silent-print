@@ -25,10 +25,15 @@ $normalizedPath = trim($requestPath, '/');
 
 $redirects = [
 	'index.php' => '/',
+	'admin.php' => '/admin/',
 	'products.php' => '/products/',
 	'business-card.php' => '/products/business-card/',
 	'pages' => '/',
 	'pages/' => '/',
+	'pages/admin' => '/admin/',
+	'pages/admin/' => '/admin/',
+	'pages/admin.php' => '/admin/',
+	'pages/admin/index.php' => '/admin/',
 	'pages/index.php' => '/',
 	'pages/products' => '/products/',
 	'pages/products/' => '/products/',
@@ -74,7 +79,16 @@ $routes = [
 		'file' => __DIR__ . '/pages/account.php',
 	],
 	'admin' => [
-		'file' => __DIR__ . '/pages/admin.php',
+		'file' => __DIR__ . '/pages/admin/index.php',
+	],
+	'admin/users' => [
+		'file' => __DIR__ . '/pages/admin/users.php',
+	],
+	'admin/security' => [
+		'file' => __DIR__ . '/pages/admin/security.php',
+	],
+	'admin/system' => [
+		'file' => __DIR__ . '/pages/admin/system.php',
 	],
 	'logout' => [
 		'file' => __DIR__ . '/pages/logout.php',

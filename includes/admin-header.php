@@ -44,19 +44,15 @@ $adminDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Admi
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>Overview</span>
                     </a>
-                    <a href="#admin-activity" class="admin-nav__link">
-                        <i class="bi bi-activity"></i>
-                        <span>Activity</span>
-                    </a>
-                    <a href="#admin-users" class="admin-nav__link">
+                    <a href="<?= $basePath ?>/admin/users/" class="admin-nav__link <?= $adminPage === 'users' ? 'is-active' : '' ?>">
                         <i class="bi bi-people-fill"></i>
                         <span>Users</span>
                     </a>
-                    <a href="#admin-security" class="admin-nav__link">
+                    <a href="<?= $basePath ?>/admin/security/" class="admin-nav__link <?= $adminPage === 'security' ? 'is-active' : '' ?>">
                         <i class="bi bi-shield-lock-fill"></i>
                         <span>Security</span>
                     </a>
-                    <a href="#admin-system" class="admin-nav__link">
+                    <a href="<?= $basePath ?>/admin/system/" class="admin-nav__link <?= $adminPage === 'system' ? 'is-active' : '' ?>">
                         <i class="bi bi-sliders"></i>
                         <span>System</span>
                     </a>
