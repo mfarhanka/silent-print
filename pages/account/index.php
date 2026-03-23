@@ -81,8 +81,8 @@ include dirname(__DIR__, 2) . '/includes/account-header.php';
                 <div class="d-grid gap-3">
                     <a href="<?= $basePath ?>/account/quotes/" class="btn btn-outline-primary rounded-pill">Open My Quotes</a>
                     <a href="<?= $basePath ?>/account/profile/" class="btn btn-outline-primary rounded-pill">Review Profile</a>
-                    <?php if (authIsAdmin($currentUser)): ?>
-                        <a href="<?= $basePath ?>/admin/" class="btn btn-dark rounded-pill">Open Admin Dashboard</a>
+                    <?php if (authHasBackofficeAccess($currentUser)): ?>
+                        <a href="<?= $basePath . authBackofficePath($currentUser) ?>" class="btn btn-dark rounded-pill">Open Management Console</a>
                     <?php endif; ?>
                 </div>
             </div>

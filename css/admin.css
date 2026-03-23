@@ -419,6 +419,17 @@ body.admin-shell {
     padding: 12px 14px;
 }
 
+.auth-input {
+    border-radius: 16px;
+    border-color: var(--admin-line-strong);
+    padding: 12px 14px;
+}
+
+.auth-input:focus {
+    border-color: rgba(196, 92, 47, 0.45);
+    box-shadow: 0 0 0 0.2rem rgba(196, 92, 47, 0.14);
+}
+
 .admin-search-input:focus {
     border-color: rgba(196, 92, 47, 0.45);
     box-shadow: 0 0 0 0.2rem rgba(196, 92, 47, 0.14);
@@ -472,6 +483,11 @@ body.admin-shell {
 .admin-badge.is-user {
     background: rgba(196, 92, 47, 0.12);
     color: var(--admin-accent-deep);
+}
+
+.admin-badge.is-staff {
+    background: rgba(12, 124, 144, 0.14);
+    color: #0a5c6c;
 }
 
 .admin-badge.is-quote-new {

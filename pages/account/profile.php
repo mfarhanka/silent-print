@@ -57,10 +57,10 @@ include dirname(__DIR__, 2) . '/includes/account-header.php';
                         <div class="fw-semibold mb-1">Next recommended action</div>
                         <div class="small text-muted">Use the public quote page for new requests, then return here to monitor progress once workflow updates are connected.</div>
                     </div>
-                    <?php if (authIsAdmin($currentUser)): ?>
+                    <?php if (authHasBackofficeAccess($currentUser)): ?>
                         <div class="account-panel-stat">
-                            <div class="fw-semibold mb-1">Admin access</div>
-                            <div class="small text-muted">This account can also open the admin console for operational oversight.</div>
+                            <div class="fw-semibold mb-1">Backoffice access</div>
+                            <div class="small text-muted">This account can also open the management console for <?= authIsAdmin($currentUser) ? 'administration and governance' : 'quote and future order operations' ?>.</div>
                         </div>
                     <?php endif; ?>
                 </div>

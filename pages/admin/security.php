@@ -2,6 +2,8 @@
 require_once dirname(__DIR__, 2) . '/includes/admin-bootstrap.php';
 require_once dirname(__DIR__, 2) . '/includes/admin-data.php';
 
+authRequireAdminPrivileges($currentUser ?? null, $basePath);
+
 $connection = adminDbConnection();
 $activeResets = adminActiveResets($connection);
 $recentResets = adminRecentResets($connection, 10);

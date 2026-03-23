@@ -2,6 +2,8 @@
 require_once dirname(__DIR__, 2) . '/includes/admin-bootstrap.php';
 require_once dirname(__DIR__, 2) . '/includes/admin-data.php';
 
+authRequireAdminPrivileges($currentUser ?? null, $basePath);
+
 $connection = adminDbConnection();
 $databaseConfig = adminDatabaseConfig();
 $totalUsers = adminTotalUsers($connection);
@@ -9,7 +11,8 @@ $usersThisWeek = adminUsersThisWeek($connection);
 $usersThisMonth = adminUsersThisMonth($connection);
 $activeResets = adminActiveResets($connection);
 $expiredResets = adminExpiredResets($connection);
-$adminEmails = authAdminEmails();
+$roleCounts = adminRoleCounts($connection);
+$backofficeUsers = adminBackofficeUsers($connection);
 $recentUsers = adminRecentUsers($connection, 8);
 $adminPolicy = adminPolicySummary();
 $authMode = adminAuthMode();
@@ -96,12 +99,12 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
             <article class="admin-stat-card">
                 <div class="admin-stat-head">
                     <div>
-                        <div class="admin-stat-label">Admin accounts</div>
-                        <div class="admin-stat-value"><?= number_format(count($adminEmails)) ?></div>
+                        <div class="admin-stat-label">Backoffice users</div>
+                        <div class="admin-stat-value"><?= number_format($roleCounts['admin'] + $roleCounts['staff']) ?></div>
                     </div>
                     <div class="admin-stat-icon"><i class="bi bi-person-badge-fill"></i></div>
                 </div>
-                <p class="text-muted mb-0">Accounts currently allowed to open this dashboard.</p>
+                <p class="text-muted mb-0">Admins and staff who can access the management console.</p>
             </article>
         </div>
 
@@ -169,11 +172,11 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
                     <h5 class="fw-bold mb-3">Access policy</h5>
                     <p class="text-muted"><?= htmlspecialchars($adminPolicy) ?></p>
                     <div class="admin-access-list">
-                        <?php foreach ($adminEmails as $email): ?>
-                            <span class="admin-access-pill"><?= htmlspecialchars($email) ?></span>
+                        <?php foreach ($backofficeUsers as $backofficeUser): ?>
+                            <span class="admin-access-pill"><?= htmlspecialchars(($backofficeUser['email'] ?? '') . ' • ' . adminResolvedRoleLabel($backofficeUser['resolved_role'] ?? 'customer')) ?></span>
                         <?php endforeach; ?>
-                        <?php if ($adminEmails === []): ?>
-                            <span class="admin-access-pill">No admin account resolved</span>
+                        <?php if ($backofficeUsers === []): ?>
+                            <span class="admin-access-pill">No backoffice accounts resolved</span>
                         <?php endif; ?>
                     </div>
 

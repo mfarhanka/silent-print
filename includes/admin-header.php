@@ -2,6 +2,7 @@
 $basePath = $basePath ?? '';
 $pageTitle = $pageTitle ?? 'SilentPrint Admin';
 $adminPage = $adminPage ?? 'dashboard';
+$backofficeHome = $basePath . authBackofficePath($currentUser ?? null);
 $adminDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Admin');
 ?>
 <!DOCTYPE html>
@@ -26,40 +27,45 @@ $adminDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Admi
     <div class="admin-layout">
         <aside class="admin-sidebar" aria-label="Admin sidebar">
             <div class="admin-sidebar__panel">
-                <a class="admin-brand" href="<?= $basePath ?>/admin/">
+                <a class="admin-brand" href="<?= $backofficeHome ?>">
                     <img src="<?= $basePath ?>/img/logo.png" class="site-logo" alt="SilentPrint Admin" loading="eager">
                     <span>
                         <span class="admin-brand__eyebrow">SilentPrint</span>
-                        <span class="admin-brand__title">Admin Console</span>
+                        <span class="admin-brand__title"><?= authIsAdmin($currentUser ?? null) ? 'Admin Console' : 'Staff Console' ?></span>
                     </span>
                 </a>
 
                 <div class="admin-identity">
                     <span class="admin-identity__label">Signed in as</span>
                     <strong><?= $adminDisplayName ?></strong>
+                    <span class="small text-muted"><?= htmlspecialchars(authRoleLabel($currentUser ?? null)) ?></span>
                 </div>
 
                 <nav class="admin-nav" aria-label="Admin navigation">
-                    <a href="<?= $basePath ?>/admin/" class="admin-nav__link <?= $adminPage === 'dashboard' ? 'is-active' : '' ?>">
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Overview</span>
-                    </a>
+                    <?php if (authIsAdmin($currentUser ?? null)): ?>
+                        <a href="<?= $basePath ?>/admin/" class="admin-nav__link <?= $adminPage === 'dashboard' ? 'is-active' : '' ?>">
+                            <i class="bi bi-grid-1x2-fill"></i>
+                            <span>Overview</span>
+                        </a>
+                    <?php endif; ?>
                     <a href="<?= $basePath ?>/admin/quotes/" class="admin-nav__link <?= $adminPage === 'quotes' ? 'is-active' : '' ?>">
                         <i class="bi bi-journal-text"></i>
                         <span>Quotes</span>
                     </a>
-                    <a href="<?= $basePath ?>/admin/users/" class="admin-nav__link <?= $adminPage === 'users' ? 'is-active' : '' ?>">
-                        <i class="bi bi-people-fill"></i>
-                        <span>Users</span>
-                    </a>
-                    <a href="<?= $basePath ?>/admin/security/" class="admin-nav__link <?= $adminPage === 'security' ? 'is-active' : '' ?>">
-                        <i class="bi bi-shield-lock-fill"></i>
-                        <span>Security</span>
-                    </a>
-                    <a href="<?= $basePath ?>/admin/system/" class="admin-nav__link <?= $adminPage === 'system' ? 'is-active' : '' ?>">
-                        <i class="bi bi-sliders"></i>
-                        <span>System</span>
-                    </a>
+                    <?php if (authIsAdmin($currentUser ?? null)): ?>
+                        <a href="<?= $basePath ?>/admin/users/" class="admin-nav__link <?= $adminPage === 'users' ? 'is-active' : '' ?>">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Users</span>
+                        </a>
+                        <a href="<?= $basePath ?>/admin/security/" class="admin-nav__link <?= $adminPage === 'security' ? 'is-active' : '' ?>">
+                            <i class="bi bi-shield-lock-fill"></i>
+                            <span>Security</span>
+                        </a>
+                        <a href="<?= $basePath ?>/admin/system/" class="admin-nav__link <?= $adminPage === 'system' ? 'is-active' : '' ?>">
+                            <i class="bi bi-sliders"></i>
+                            <span>System</span>
+                        </a>
+                    <?php endif; ?>
                 </nav>
 
                 <div class="admin-sidebar__actions">

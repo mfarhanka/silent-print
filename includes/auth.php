@@ -2,6 +2,13 @@
 
 require_once __DIR__ . '/database.php';
 
+function authNormalizeRole(string $role): string
+{
+    $normalizedRole = strtolower(trim($role));
+
+    return in_array($normalizedRole, ['customer', 'staff', 'admin'], true) ? $normalizedRole : 'customer';
+}
+
 function authNormalizeEmail(string $email): string
 {
     return strtolower(trim($email));
@@ -11,7 +18,7 @@ function authFindUserByEmail(string $email): ?array
 {
     $normalizedEmail = authNormalizeEmail($email);
     $connection = dbConnection();
-    $statement = $connection->prepare('SELECT first_name, last_name, email, password_hash, created_at FROM users WHERE email = ? LIMIT 1');
+    $statement = $connection->prepare('SELECT first_name, last_name, email, password_hash, role, created_at FROM users WHERE email = ? LIMIT 1');
     $statement->bind_param('s', $normalizedEmail);
     $statement->execute();
     $result = $statement->get_result();
@@ -55,17 +62,29 @@ function authCreateUser(array $data): array
         'last_name' => trim($data['last_name']),
         'email' => authNormalizeEmail($data['email']),
         'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT),
+        'role' => authNormalizeRole((string) ($data['role'] ?? 'customer')),
         'created_at' => date('c'),
     ];
 
     $connection = dbConnection();
-    $statement = $connection->prepare('INSERT INTO users (first_name, last_name, email, password_hash, created_at) VALUES (?, ?, ?, ?, ?)');
+    $statement = $connection->prepare('INSERT INTO users (first_name, last_name, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?, ?)');
     $createdAt = date('Y-m-d H:i:s', strtotime($user['created_at']));
-    $statement->bind_param('sssss', $user['first_name'], $user['last_name'], $user['email'], $user['password_hash'], $createdAt);
+    $statement->bind_param('ssssss', $user['first_name'], $user['last_name'], $user['email'], $user['password_hash'], $user['role'], $createdAt);
     $statement->execute();
     $statement->close();
 
     return $user;
+}
+
+function authUpdateUserRole(string $email, string $role): void
+{
+    $normalizedEmail = authNormalizeEmail($email);
+    $normalizedRole = authNormalizeRole($role);
+    $connection = dbConnection();
+    $statement = $connection->prepare('UPDATE users SET role = ? WHERE email = ?');
+    $statement->bind_param('ss', $normalizedRole, $normalizedEmail);
+    $statement->execute();
+    $statement->close();
 }
 
 function authUpdateUserPassword(string $email, string $password): void
@@ -122,13 +141,57 @@ function authAdminEmails(): array
     return $emails;
 }
 
-function authIsAdmin(?array $user): bool
+function authUserRole(?array $user): string
 {
     if (!$user || empty($user['email'])) {
-        return false;
+        return 'guest';
     }
 
-    return in_array(authNormalizeEmail((string) $user['email']), authAdminEmails(), true);
+    $storedRole = authNormalizeRole((string) ($user['role'] ?? 'customer'));
+
+    if ($storedRole !== 'customer') {
+        return $storedRole;
+    }
+
+    return in_array(authNormalizeEmail((string) $user['email']), authAdminEmails(), true) ? 'admin' : 'customer';
+}
+
+function authIsAdmin(?array $user): bool
+{
+    return authUserRole($user) === 'admin';
+}
+
+function authIsStaff(?array $user): bool
+{
+    return authUserRole($user) === 'staff';
+}
+
+function authHasBackofficeAccess(?array $user): bool
+{
+    return in_array(authUserRole($user), ['admin', 'staff'], true);
+}
+
+function authBackofficePath(?array $user): string
+{
+    if (authIsAdmin($user)) {
+        return '/admin/';
+    }
+
+    if (authIsStaff($user)) {
+        return '/admin/quotes/';
+    }
+
+    return '/account/';
+}
+
+function authRoleLabel(?array $user): string
+{
+    return match (authUserRole($user)) {
+        'admin' => 'Admin',
+        'staff' => 'Staff',
+        'customer' => 'Customer',
+        default => 'Guest',
+    };
 }
 
 function authCsrfToken(): string
@@ -178,6 +241,26 @@ function authRequireAdmin(?array $currentUser, string $basePath): void
     if (!authIsAdmin($currentUser)) {
         authFlash('danger', 'Admin access is restricted to approved accounts.');
         authRedirect($basePath, '/account/');
+    }
+}
+
+function authRequireBackoffice(?array $currentUser, string $basePath): void
+{
+    authRequireUser($currentUser, $basePath);
+
+    if (!authHasBackofficeAccess($currentUser)) {
+        authFlash('danger', 'Backoffice access is restricted to admin and staff accounts.');
+        authRedirect($basePath, '/account/');
+    }
+}
+
+function authRequireAdminPrivileges(?array $currentUser, string $basePath): void
+{
+    authRequireBackoffice($currentUser, $basePath);
+
+    if (!authIsAdmin($currentUser)) {
+        authFlash('danger', 'Only admins can access that management section.');
+        authRedirect($basePath, authBackofficePath($currentUser));
     }
 }
 

@@ -39,10 +39,11 @@ function adminRecentUsers(mysqli $connection, int $limit = 8): array
 {
     $recentUsers = [];
     $limit = max(1, $limit);
-    $result = $connection->query("SELECT first_name, last_name, email, created_at FROM users ORDER BY created_at DESC, id DESC LIMIT {$limit}");
+    $result = $connection->query("SELECT first_name, last_name, email, role, created_at FROM users ORDER BY created_at DESC, id DESC LIMIT {$limit}");
 
     if ($result instanceof mysqli_result) {
         while ($row = $result->fetch_assoc()) {
+            $row['resolved_role'] = authUserRole($row);
             $recentUsers[] = $row;
         }
     }
@@ -56,7 +57,7 @@ function adminDirectoryUsers(mysqli $connection, string $searchQuery = '', int $
     $limit = max(1, $limit);
 
     if ($searchQuery !== '') {
-        $statement = $connection->prepare("SELECT first_name, last_name, email, created_at FROM users WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ORDER BY created_at DESC, id DESC LIMIT {$limit}");
+        $statement = $connection->prepare("SELECT first_name, last_name, email, role, created_at FROM users WHERE first_name LIKE ? OR last_name LIKE ? OR email LIKE ? ORDER BY created_at DESC, id DESC LIMIT {$limit}");
         $searchTerm = '%' . $searchQuery . '%';
         $statement->bind_param('sss', $searchTerm, $searchTerm, $searchTerm);
         $statement->execute();
@@ -64,6 +65,7 @@ function adminDirectoryUsers(mysqli $connection, string $searchQuery = '', int $
 
         if ($result instanceof mysqli_result) {
             while ($row = $result->fetch_assoc()) {
+                $row['resolved_role'] = authUserRole($row);
                 $directoryUsers[] = $row;
             }
         }
@@ -73,10 +75,11 @@ function adminDirectoryUsers(mysqli $connection, string $searchQuery = '', int $
         return $directoryUsers;
     }
 
-    $result = $connection->query("SELECT first_name, last_name, email, created_at FROM users ORDER BY created_at DESC, id DESC LIMIT {$limit}");
+    $result = $connection->query("SELECT first_name, last_name, email, role, created_at FROM users ORDER BY created_at DESC, id DESC LIMIT {$limit}");
 
     if ($result instanceof mysqli_result) {
         while ($row = $result->fetch_assoc()) {
+            $row['resolved_role'] = authUserRole($row);
             $directoryUsers[] = $row;
         }
     }
@@ -101,14 +104,72 @@ function adminRecentResets(mysqli $connection, int $limit = 10): array
 
 function adminPolicySummary(): string
 {
-    return getenv('SILENT_PRINT_ADMIN_EMAILS')
-        ? 'Admin access is controlled by the SILENT_PRINT_ADMIN_EMAILS environment variable.'
-        : 'Admin access currently falls back to the earliest registered account for local development.';
+    return 'Backoffice access is controlled by stored user roles. The SILENT_PRINT_ADMIN_EMAILS fallback remains available so the original admin account can still bootstrap local environments.';
 }
 
 function adminAuthMode(): string
 {
-    return getenv('SILENT_PRINT_ADMIN_EMAILS') ? 'Explicit environment configuration' : 'Local fallback mode';
+    return 'Stored roles with legacy admin fallback';
+}
+
+function adminResolvedRoleLabel(string $role): string
+{
+    return match ($role) {
+        'admin' => 'Admin',
+        'staff' => 'Staff',
+        default => 'Customer',
+    };
+}
+
+function adminResolvedRoleBadgeClass(string $role): string
+{
+    return match ($role) {
+        'admin' => 'is-admin',
+        'staff' => 'is-staff',
+        default => 'is-user',
+    };
+}
+
+function adminRoleCounts(mysqli $connection): array
+{
+    $counts = [
+        'admin' => 0,
+        'staff' => 0,
+        'customer' => 0,
+    ];
+    $result = $connection->query('SELECT first_name, last_name, email, role, created_at FROM users');
+
+    if ($result instanceof mysqli_result) {
+        while ($row = $result->fetch_assoc()) {
+            $role = authUserRole($row);
+            if (!array_key_exists($role, $counts)) {
+                $role = 'customer';
+            }
+            $counts[$role]++;
+        }
+    }
+
+    return $counts;
+}
+
+function adminBackofficeUsers(mysqli $connection): array
+{
+    $users = [];
+    $result = $connection->query('SELECT first_name, last_name, email, role, created_at FROM users ORDER BY created_at ASC, id ASC');
+
+    if ($result instanceof mysqli_result) {
+        while ($row = $result->fetch_assoc()) {
+            $resolvedRole = authUserRole($row);
+            if (!in_array($resolvedRole, ['admin', 'staff'], true)) {
+                continue;
+            }
+
+            $row['resolved_role'] = $resolvedRole;
+            $users[] = $row;
+        }
+    }
+
+    return $users;
 }
 
 function adminSystemStatus(array $databaseConfig): array

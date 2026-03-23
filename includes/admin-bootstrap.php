@@ -7,4 +7,4 @@ if (!defined('APP_BOOTSTRAPPED')) {
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/database.php';
 
-authRequireAdmin($currentUser ?? null, $basePath);
+authRequireBackoffice($currentUser ?? null, $basePath);

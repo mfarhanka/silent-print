@@ -2,8 +2,11 @@
 require_once dirname(__DIR__, 2) . '/includes/admin-bootstrap.php';
 require_once dirname(__DIR__, 2) . '/includes/admin-data.php';
 
+authRequireAdminPrivileges($currentUser ?? null, $basePath);
+
 $databaseConfig = adminDatabaseConfig();
-$adminEmails = authAdminEmails();
+$connection = adminDbConnection();
+$backofficeUsers = adminBackofficeUsers($connection);
 $adminPolicy = adminPolicySummary();
 $authMode = adminAuthMode();
 $systemStatus = adminSystemStatus($databaseConfig);
@@ -23,11 +26,11 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
                 <p class="text-muted mb-4"><?= htmlspecialchars($adminPolicy) ?></p>
 
                 <div class="admin-access-list mb-4">
-                    <?php foreach ($adminEmails as $email): ?>
-                        <span class="admin-access-pill"><?= htmlspecialchars($email) ?></span>
+                    <?php foreach ($backofficeUsers as $backofficeUser): ?>
+                        <span class="admin-access-pill"><?= htmlspecialchars(($backofficeUser['email'] ?? '') . ' • ' . adminResolvedRoleLabel($backofficeUser['resolved_role'] ?? 'customer')) ?></span>
                     <?php endforeach; ?>
-                    <?php if ($adminEmails === []): ?>
-                        <span class="admin-access-pill">No admin account resolved</span>
+                    <?php if ($backofficeUsers === []): ?>
+                        <span class="admin-access-pill">No backoffice account resolved</span>
                     <?php endif; ?>
                 </div>
 
@@ -64,8 +67,8 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
                         <div class="small text-muted">Use the dedicated Quotes page to verify whether the public quote route is still informational or backed by storage.</div>
                     </div>
                     <div class="account-stat">
-                        <div class="fw-semibold mb-1">Set explicit admin emails</div>
-                        <div class="small text-muted">Define SILENT_PRINT_ADMIN_EMAILS to avoid relying on the local fallback rule.</div>
+                        <div class="fw-semibold mb-1">Provision roles deliberately</div>
+                        <div class="small text-muted">Create staff for quote and future order handling, and reserve the admin role for governance tasks.</div>
                     </div>
                     <div class="account-stat">
                         <div class="fw-semibold mb-1">Add rate limiting</div>

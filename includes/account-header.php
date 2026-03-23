@@ -56,8 +56,8 @@ $accountDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Cu
                 </nav>
 
                 <div class="account-sidebar__actions">
-                    <?php if (authIsAdmin($currentUser ?? null)): ?>
-                        <a href="<?= $basePath ?>/admin/" class="btn btn-dark btn-sm rounded-pill px-3">Open Admin</a>
+                    <?php if (authHasBackofficeAccess($currentUser ?? null)): ?>
+                        <a href="<?= $basePath . authBackofficePath($currentUser ?? null) ?>" class="btn btn-dark btn-sm rounded-pill px-3">Open Console</a>
                     <?php endif; ?>
                     <a href="<?= $basePath ?>/products/" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Browse Products</a>
                     <a href="<?= $basePath ?>/quote/" class="btn btn-primary btn-sm rounded-pill px-3">Request Quote</a>

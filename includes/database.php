@@ -72,9 +72,14 @@ function dbEnsureSchema(mysqli $connection): void
             last_name VARCHAR(100) NOT NULL,
             email VARCHAR(190) NOT NULL UNIQUE,
             password_hash VARCHAR(255) NOT NULL,
+            role VARCHAR(32) NOT NULL DEFAULT "customer",
             created_at DATETIME NOT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
+
+    if (!dbColumnExists($connection, 'users', 'role')) {
+        $connection->query('ALTER TABLE users ADD COLUMN role VARCHAR(32) NOT NULL DEFAULT "customer" AFTER password_hash');
+    }
 
     $connection->query(
         'CREATE TABLE IF NOT EXISTS password_resets (
@@ -112,6 +117,18 @@ function dbEnsureSchema(mysqli $connection): void
 
     dbMigrateLegacyJson($connection);
     $initialized = true;
+}
+
+function dbColumnExists(mysqli $connection, string $tableName, string $columnName): bool
+{
+    $statement = $connection->prepare('SELECT COUNT(*) AS total FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?');
+    $statement->bind_param('ss', $tableName, $columnName);
+    $statement->execute();
+    $result = $statement->get_result();
+    $row = $result instanceof mysqli_result ? $result->fetch_assoc() : ['total' => 0];
+    $statement->close();
+
+    return (int) ($row['total'] ?? 0) > 0;
 }
 
 function dbMigrateLegacyJson(mysqli $connection): void
