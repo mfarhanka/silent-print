@@ -60,12 +60,12 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
                 <h5 class="fw-bold mb-3">Recommended hardening</h5>
                 <div class="d-grid gap-3">
                     <div class="account-stat">
-                        <div class="fw-semibold mb-1">Set explicit admin emails</div>
-                        <div class="small text-muted">Define SILENT_PRINT_ADMIN_EMAILS to avoid relying on the local fallback rule.</div>
+                        <div class="fw-semibold mb-1">Quote operations</div>
+                        <div class="small text-muted">Use the dedicated Quotes page to verify whether the public quote route is still informational or backed by storage.</div>
                     </div>
                     <div class="account-stat">
-                        <div class="fw-semibold mb-1">Add quote management</div>
-                        <div class="small text-muted">The dashboard is ready for quote and order metrics once those tables exist.</div>
+                        <div class="fw-semibold mb-1">Set explicit admin emails</div>
+                        <div class="small text-muted">Define SILENT_PRINT_ADMIN_EMAILS to avoid relying on the local fallback rule.</div>
                     </div>
                     <div class="account-stat">
                         <div class="fw-semibold mb-1">Add rate limiting</div>

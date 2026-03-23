@@ -120,3 +120,32 @@ function adminSystemStatus(array $databaseConfig): array
         'legacyResetsJsonExists' => is_file(dirname(__DIR__) . '/data/password_resets.json'),
     ];
 }
+
+function adminTableExists(mysqli $connection, string $tableName): bool
+{
+    $statement = $connection->prepare('SHOW TABLES LIKE ?');
+    $statement->bind_param('s', $tableName);
+    $statement->execute();
+    $result = $statement->get_result();
+    $exists = $result instanceof mysqli_result && $result->num_rows > 0;
+    $statement->close();
+
+    return $exists;
+}
+
+function adminQuoteStatus(mysqli $connection, string $basePath = ''): array
+{
+    $quotePageExists = is_file(dirname(__DIR__) . '/pages/quote.php');
+    $quoteTableExists = adminTableExists($connection, 'quotes');
+
+    return [
+        'publicRoute' => ($basePath !== '' ? $basePath : '') . '/quote/',
+        'quotePageExists' => $quotePageExists,
+        'quoteTableExists' => $quoteTableExists,
+        'submissionMode' => $quoteTableExists ? 'Stored submissions available' : 'Informational page only',
+        'storageMode' => $quoteTableExists ? 'MySQL quotes table present' : 'No quotes table detected',
+        'nextAction' => $quoteTableExists
+            ? 'Extend the admin page with workflow states, ownership, and response tracking.'
+            : 'Add quote submission handling and persist requests before building operational workflow tools.',
+    ];
+}

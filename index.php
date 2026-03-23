@@ -81,6 +81,9 @@ $routes = [
 	'admin' => [
 		'file' => __DIR__ . '/pages/admin/index.php',
 	],
+	'admin/quotes' => [
+		'file' => __DIR__ . '/pages/admin/quotes.php',
+	],
 	'admin/users' => [
 		'file' => __DIR__ . '/pages/admin/users.php',
 	],

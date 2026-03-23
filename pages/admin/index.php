@@ -14,6 +14,7 @@ $recentUsers = adminRecentUsers($connection, 8);
 $adminPolicy = adminPolicySummary();
 $authMode = adminAuthMode();
 $systemStatus = adminSystemStatus($databaseConfig);
+$quoteStatus = adminQuoteStatus($connection, $basePath);
 
 $pageTitle = 'Admin Dashboard | SilentPrint';
 $adminPage = 'dashboard';
@@ -105,6 +106,12 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
         </div>
 
         <div class="admin-shortcuts mb-4">
+            <article class="content-card shadow-none border-0 bg-light admin-shortcut-card">
+                <div class="admin-kicker">Quotes</div>
+                <h5 class="fw-bold mb-2">Review quote operations</h5>
+                <p class="text-muted mb-3">See whether quote intake is live and what the next implementation step should be.</p>
+                <a href="<?= $basePath ?>/admin/quotes/" class="btn btn-outline-primary rounded-pill">Open Quote Operations</a>
+            </article>
             <article class="content-card shadow-none border-0 bg-light admin-shortcut-card">
                 <div class="admin-kicker">Accounts</div>
                 <h5 class="fw-bold mb-2">Search user directory</h5>
@@ -198,12 +205,12 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
                     <h5 class="fw-bold mb-3">Recommended next steps</h5>
                     <div class="d-grid gap-3">
                         <div class="account-stat">
-                            <div class="fw-semibold mb-1">Set explicit admin emails</div>
-                            <div class="small text-muted">Define SILENT_PRINT_ADMIN_EMAILS to avoid relying on the local fallback rule.</div>
+                            <div class="fw-semibold mb-1">Quote operations status</div>
+                            <div class="small text-muted"><?= htmlspecialchars($quoteStatus['nextAction']) ?></div>
                         </div>
                         <div class="account-stat">
-                            <div class="fw-semibold mb-1">Add quote management</div>
-                            <div class="small text-muted">The dashboard is ready for quote and order metrics once those tables exist.</div>
+                            <div class="fw-semibold mb-1">Set explicit admin emails</div>
+                            <div class="small text-muted">Define SILENT_PRINT_ADMIN_EMAILS to avoid relying on the local fallback rule.</div>
                         </div>
                         <div class="account-stat">
                             <div class="fw-semibold mb-1">Add rate limiting</div>
