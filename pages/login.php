@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         authLoginUser($user);
         authFlash('success', 'You are now logged in.');
-        authRedirect($basePath, '/account/');
+        authRedirect($basePath, authLoginDestination($user));
     }
 }
 
@@ -88,6 +88,7 @@ include dirname(__DIR__) . '/includes/header.php';
                                     </div>
                                 </form>
                                 <p class="small text-muted mt-4 mb-2">New here? <a href="<?= $basePath ?>/signup/" class="text-decoration-none">Create an account</a>.</p>
+                                <p class="small text-muted mb-2">Admin or staff? <a href="<?= $basePath ?>/admin/login/" class="text-decoration-none">Use the backoffice login</a>.</p>
                                 <p class="small text-muted mb-0">This login now uses local PHP session authentication backed by the workspace data store.</p>
                             </div>
                         </div>

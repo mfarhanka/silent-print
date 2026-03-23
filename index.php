@@ -34,6 +34,7 @@ $redirects = [
 	'pages/admin/' => '/admin/',
 	'pages/admin.php' => '/admin/',
 	'pages/admin/index.php' => '/admin/',
+	'pages/admin/login.php' => '/admin/login/',
 	'pages/account' => '/account/',
 	'pages/account/' => '/account/',
 	'pages/account.php' => '/account/',
@@ -69,6 +70,9 @@ $routes = [
 	],
 	'login' => [
 		'file' => __DIR__ . '/pages/login.php',
+	],
+	'admin/login' => [
+		'file' => __DIR__ . '/pages/admin/login.php',
 	],
 	'forgot-password' => [
 		'file' => __DIR__ . '/pages/forgot-password.php',

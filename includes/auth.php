@@ -184,6 +184,20 @@ function authBackofficePath(?array $user): string
     return '/account/';
 }
 
+function authLoginDestination(?array $user): string
+{
+    if (authHasBackofficeAccess($user)) {
+        return authBackofficePath($user);
+    }
+
+    return '/account/';
+}
+
+function authIsCustomer(?array $user): bool
+{
+    return authUserRole($user) === 'customer';
+}
+
 function authRoleLabel(?array $user): string
 {
     return match (authUserRole($user)) {
@@ -223,7 +237,14 @@ function authRedirect(string $basePath, string $path): void
 function authRequireGuest(?array $currentUser, string $basePath): void
 {
     if (!empty($currentUser)) {
-        authRedirect($basePath, '/account/');
+        authRedirect($basePath, authLoginDestination($currentUser));
+    }
+}
+
+function authRequireGuestForBackoffice(?array $currentUser, string $basePath): void
+{
+    if (!empty($currentUser)) {
+        authRedirect($basePath, authLoginDestination($currentUser));
     }
 }
 
@@ -246,7 +267,9 @@ function authRequireAdmin(?array $currentUser, string $basePath): void
 
 function authRequireBackoffice(?array $currentUser, string $basePath): void
 {
-    authRequireUser($currentUser, $basePath);
+    if (empty($currentUser)) {
+        authRedirect($basePath, '/admin/login/');
+    }
 
     if (!authHasBackofficeAccess($currentUser)) {
         authFlash('danger', 'Backoffice access is restricted to admin and staff accounts.');
