@@ -1,10 +1,15 @@
-<?php $basePath = $basePath ?? ''; ?>
+<?php
+$basePath = $basePath ?? '';
+$pageTitle = $pageTitle ?? 'SilentPrint - Online Printing Marketplace';
+$bodyClass = $bodyClass ?? '';
+$extraStylesheets = is_array($extraStylesheets ?? null) ? $extraStylesheets : [];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SilentPrint - Online Printing Marketplace</title>
+    <title><?= htmlspecialchars($pageTitle) ?></title>
     <!-- Favicon and App Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="<?= $basePath ?>/favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<?= $basePath ?>/favicon_io/favicon-32x32.png">
@@ -18,8 +23,11 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= $basePath ?>/css/style.css">
+    <?php foreach ($extraStylesheets as $extraStylesheet): ?>
+        <link rel="stylesheet" href="<?= htmlspecialchars((string) $extraStylesheet) ?>">
+    <?php endforeach; ?>
 </head>
-<body>
+<body<?= $bodyClass !== '' ? ' class="' . htmlspecialchars($bodyClass) . '"' : '' ?>>
 
     <!-- Header / Navbar -->
     <header class="sticky-top bg-white shadow-sm">

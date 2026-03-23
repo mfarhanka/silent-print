@@ -639,3 +639,98 @@ body.admin-shell {
         border-radius: 16px;
     }
 }
+
+body.admin-login-page {
+    background:
+        radial-gradient(circle at top left, rgba(196, 92, 47, 0.16), transparent 24%),
+        radial-gradient(circle at top right, rgba(129, 49, 27, 0.12), transparent 30%),
+        linear-gradient(180deg, #fbf7f0 0%, var(--admin-bg) 100%);
+}
+
+body.admin-login-page .sticky-top {
+    background: rgba(251, 247, 240, 0.92) !important;
+    border-bottom: 1px solid var(--admin-line);
+    box-shadow: 0 12px 28px rgba(45, 33, 17, 0.06) !important;
+    backdrop-filter: blur(16px);
+}
+
+body.admin-login-page .navbar-brand,
+body.admin-login-page .nav-link.is-active,
+body.admin-login-page .text-primary {
+    color: var(--admin-accent-deep) !important;
+}
+
+body.admin-login-page .nav-link.is-active {
+    background: rgba(196, 92, 47, 0.12);
+}
+
+body.admin-login-page .btn-primary {
+    background-color: var(--admin-accent);
+    border-color: var(--admin-accent);
+}
+
+body.admin-login-page .btn-primary:hover,
+body.admin-login-page .btn-primary:focus-visible {
+    background-color: var(--admin-accent-deep);
+    border-color: var(--admin-accent-deep);
+}
+
+body.admin-login-page .btn-outline-primary {
+    color: var(--admin-accent-deep);
+    border-color: rgba(129, 49, 27, 0.28);
+}
+
+body.admin-login-page .btn-outline-primary:hover,
+body.admin-login-page .btn-outline-primary:focus-visible {
+    color: #fff;
+    background-color: var(--admin-accent-deep);
+    border-color: var(--admin-accent-deep);
+}
+
+body.admin-login-page .auth-shell {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, rgba(196, 92, 47, 0.12), transparent 32%),
+        linear-gradient(180deg, rgba(251, 247, 240, 0.36) 0%, rgba(243, 240, 232, 0.12) 100%);
+}
+
+body.admin-login-page .auth-panel {
+    border: 1px solid var(--admin-line);
+    border-radius: 28px;
+    box-shadow: var(--admin-shadow);
+    background: rgba(255, 252, 247, 0.88);
+    backdrop-filter: blur(16px);
+}
+
+body.admin-login-page .auth-aside {
+    background:
+        radial-gradient(circle at top right, rgba(255, 226, 214, 0.2), transparent 28%),
+        linear-gradient(145deg, #2d2111 0%, #6f2d19 48%, #c45c2f 100%);
+}
+
+body.admin-login-page .content-meta {
+    background: rgba(255, 255, 255, 0.88) !important;
+    color: var(--admin-accent-deep) !important;
+}
+
+body.admin-login-page .auth-form-wrap {
+    background: rgba(255, 252, 247, 0.74);
+}
+
+body.admin-login-page .auth-input {
+    border-color: var(--admin-line-strong);
+}
+
+body.admin-login-page .auth-input:focus {
+    border-color: rgba(196, 92, 47, 0.45);
+    box-shadow: 0 0 0 0.2rem rgba(196, 92, 47, 0.14);
+}
+
+body.admin-login-page .footer-top {
+    background: rgba(255, 252, 247, 0.8);
+    border-top: 1px solid var(--admin-line);
+}
+
+body.admin-login-page .footer-main {
+    background: rgba(243, 240, 232, 0.86);
+}
