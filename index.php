@@ -34,6 +34,10 @@ $redirects = [
 	'pages/admin/' => '/admin/',
 	'pages/admin.php' => '/admin/',
 	'pages/admin/index.php' => '/admin/',
+	'pages/account' => '/account/',
+	'pages/account/' => '/account/',
+	'pages/account.php' => '/account/',
+	'pages/account/index.php' => '/account/',
 	'pages/index.php' => '/',
 	'pages/products' => '/products/',
 	'pages/products/' => '/products/',
@@ -76,7 +80,13 @@ $routes = [
 		'file' => __DIR__ . '/pages/signup.php',
 	],
 	'account' => [
-		'file' => __DIR__ . '/pages/account.php',
+		'file' => __DIR__ . '/pages/account/index.php',
+	],
+	'account/quotes' => [
+		'file' => __DIR__ . '/pages/account/quotes.php',
+	],
+	'account/profile' => [
+		'file' => __DIR__ . '/pages/account/profile.php',
 	],
 	'admin' => [
 		'file' => __DIR__ . '/pages/admin/index.php',
