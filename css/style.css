@@ -231,6 +231,10 @@ html {
         linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
 }
 
+body.client-login-page .auth-shell {
+    min-height: 100vh;
+}
+
 .auth-panel {
     background: #fff;
     border: 1px solid rgba(0, 51, 102, 0.08);
