@@ -255,6 +255,16 @@ function authRequireUser(?array $currentUser, string $basePath): void
     }
 }
 
+function authRequireClientConsole(?array $currentUser, string $basePath): void
+{
+    authRequireUser($currentUser, $basePath);
+
+    if (authHasBackofficeAccess($currentUser)) {
+        authFlash('info', 'Backoffice accounts use the management console instead of the client console.');
+        authRedirect($basePath, authBackofficePath($currentUser));
+    }
+}
+
 function authRequireAdmin(?array $currentUser, string $basePath): void
 {
     authRequireUser($currentUser, $basePath);

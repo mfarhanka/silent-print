@@ -69,7 +69,7 @@ $adminDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Admi
                 </nav>
 
                 <div class="admin-sidebar__actions">
-                    <a href="<?= $basePath ?>/account/" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Account</a>
+                    <a href="<?= $backofficeHome ?>" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Console Home</a>
                     <a href="<?= $basePath ?>/" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Storefront</a>
                     <a href="<?= $basePath ?>/logout/" class="btn btn-primary btn-sm rounded-pill px-3">Log Out</a>
                 </div>

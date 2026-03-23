@@ -46,7 +46,9 @@
                         <?php if (authHasBackofficeAccess($currentUser)): ?>
                             <a href="<?= $basePath . authBackofficePath($currentUser) ?>" class="btn btn-light btn-sm rounded-pill px-3">Console</a>
                         <?php endif; ?>
-                        <a href="<?= $basePath ?>/account/" class="btn btn-outline-primary btn-sm rounded-pill px-3"><?= htmlspecialchars(authFullName($currentUser) ?: 'My Account') ?></a>
+                        <?php if (!authHasBackofficeAccess($currentUser)): ?>
+                            <a href="<?= $basePath ?>/account/" class="btn btn-outline-primary btn-sm rounded-pill px-3"><?= htmlspecialchars(authFullName($currentUser) ?: 'My Account') ?></a>
+                        <?php endif; ?>
                         <a href="<?= $basePath ?>/logout/" class="btn btn-primary btn-sm rounded-pill px-3">Log Out</a>
                     <?php else: ?>
                         <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</a>

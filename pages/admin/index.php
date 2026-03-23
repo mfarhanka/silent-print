@@ -35,7 +35,7 @@ include dirname(__DIR__, 2) . '/includes/admin-header.php';
                     <p class="text-muted mb-0">Review account activity, auth health, reset traffic, and current system access rules from one page.</p>
                 </div>
                 <div class="d-flex gap-2 flex-wrap">
-                    <a href="<?= $basePath ?>/account/" class="btn btn-outline-primary rounded-pill px-4">Back to Account</a>
+                    <a href="<?= $basePath . authBackofficePath($currentUser ?? null) ?>" class="btn btn-outline-primary rounded-pill px-4">Console Home</a>
                     <a href="<?= $basePath ?>/products/" class="btn btn-primary rounded-pill px-4">View Storefront</a>
                 </div>
             </div>
