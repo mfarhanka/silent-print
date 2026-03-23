@@ -23,9 +23,9 @@ $adminDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Admi
     <link rel="stylesheet" href="<?= $basePath ?>/css/admin.css">
 </head>
 <body class="admin-shell">
-    <header class="admin-header">
-        <div class="container">
-            <div class="admin-header__inner">
+    <div class="admin-layout">
+        <aside class="admin-sidebar" aria-label="Admin sidebar">
+            <div class="admin-sidebar__panel">
                 <a class="admin-brand" href="<?= $basePath ?>/admin/">
                     <img src="<?= $basePath ?>/img/logo.png" class="site-logo" alt="SilentPrint Admin" loading="eager">
                     <span>
@@ -34,48 +34,49 @@ $adminDisplayName = htmlspecialchars(authFullName($currentUser ?? null) ?: 'Admi
                     </span>
                 </a>
 
-                <div class="admin-header__actions">
-                    <div class="admin-identity">
-                        <span class="admin-identity__label">Signed in as</span>
-                        <strong><?= $adminDisplayName ?></strong>
-                    </div>
+                <div class="admin-identity">
+                    <span class="admin-identity__label">Signed in as</span>
+                    <strong><?= $adminDisplayName ?></strong>
+                </div>
+
+                <nav class="admin-nav" aria-label="Admin navigation">
+                    <a href="<?= $basePath ?>/admin/" class="admin-nav__link <?= $adminPage === 'dashboard' ? 'is-active' : '' ?>">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#admin-activity" class="admin-nav__link">
+                        <i class="bi bi-activity"></i>
+                        <span>Activity</span>
+                    </a>
+                    <a href="#admin-users" class="admin-nav__link">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Users</span>
+                    </a>
+                    <a href="#admin-security" class="admin-nav__link">
+                        <i class="bi bi-shield-lock-fill"></i>
+                        <span>Security</span>
+                    </a>
+                    <a href="#admin-system" class="admin-nav__link">
+                        <i class="bi bi-sliders"></i>
+                        <span>System</span>
+                    </a>
+                </nav>
+
+                <div class="admin-sidebar__actions">
                     <a href="<?= $basePath ?>/account/" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Account</a>
                     <a href="<?= $basePath ?>/" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Storefront</a>
                     <a href="<?= $basePath ?>/logout/" class="btn btn-primary btn-sm rounded-pill px-3">Log Out</a>
                 </div>
             </div>
+        </aside>
 
-            <nav class="admin-nav" aria-label="Admin navigation">
-                <a href="<?= $basePath ?>/admin/" class="admin-nav__link <?= $adminPage === 'dashboard' ? 'is-active' : '' ?>">
-                    <i class="bi bi-grid-1x2-fill"></i>
-                    <span>Overview</span>
-                </a>
-                <a href="#admin-activity" class="admin-nav__link">
-                    <i class="bi bi-activity"></i>
-                    <span>Activity</span>
-                </a>
-                <a href="#admin-users" class="admin-nav__link">
-                    <i class="bi bi-people-fill"></i>
-                    <span>Users</span>
-                </a>
-                <a href="#admin-security" class="admin-nav__link">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    <span>Security</span>
-                </a>
-                <a href="#admin-system" class="admin-nav__link">
-                    <i class="bi bi-sliders"></i>
-                    <span>System</span>
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <?php if (!empty($flash['message'])): ?>
-        <div class="container mt-4">
+        <div class="admin-content">
+            <?php if (!empty($flash['message'])): ?>
+                <div class="container admin-flash">
             <div class="alert alert-<?= htmlspecialchars($flash['type'] ?? 'info') ?> auth-alert mb-0" role="alert">
                 <?= htmlspecialchars($flash['message']) ?>
             </div>
-        </div>
-    <?php endif; ?>
+                </div>
+            <?php endif; ?>
 
-    <main class="admin-main">
+            <main class="admin-main">
