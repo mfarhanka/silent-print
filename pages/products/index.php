@@ -33,6 +33,16 @@ include dirname(__DIR__, 2) . '/includes/header.php';
             </div>
             <div class="col-md-3">
                 <div class="card h-100">
+                    <img src="<?= $basePath ?>/img/products/buntings.png" class="card-img-top" alt="Bunting">
+                    <div class="card-body">
+                        <h5 class="card-title">Bunting</h5>
+                        <p class="card-text">Vertical display buntings for roadshows, retail promotions, events, and directional signage.</p>
+                        <a href="<?= $basePath ?>/products/bunting/" class="btn btn-outline-primary btn-sm mt-2 w-100">Customize &amp; Order</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100">
                     <img src="<?= $basePath ?>/img/products/notebooks.png" class="card-img-top" alt="Notebooks">
                     <div class="card-body">
                         <h5 class="card-title">Notebooks</h5>
