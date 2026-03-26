@@ -198,3 +198,30 @@ function dbMigrateLegacyJson(mysqli $connection): void
 
     $migrated = true;
 }
+
+function dbCreateQuote(mysqli $connection, array $quoteData): void
+{
+    $statement = $connection->prepare(
+        'INSERT INTO quotes (full_name, email, phone, company, product_name, quantity, specifications, needed_by, status, source, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())'
+    );
+
+    $fullName = trim((string) ($quoteData['full_name'] ?? ''));
+    $email = strtolower(trim((string) ($quoteData['email'] ?? '')));
+    $phone = trim((string) ($quoteData['phone'] ?? ''));
+    $company = trim((string) ($quoteData['company'] ?? ''));
+    $productName = trim((string) ($quoteData['product_name'] ?? ''));
+    $quantity = isset($quoteData['quantity']) && $quoteData['quantity'] !== '' ? max(1, (int) $quoteData['quantity']) : null;
+    $specifications = trim((string) ($quoteData['specifications'] ?? ''));
+    $neededBy = trim((string) ($quoteData['needed_by'] ?? ''));
+    $status = trim((string) ($quoteData['status'] ?? 'new'));
+    $source = trim((string) ($quoteData['source'] ?? 'web'));
+
+    $phone = $phone !== '' ? $phone : null;
+    $company = $company !== '' ? $company : null;
+    $specifications = $specifications !== '' ? $specifications : null;
+    $neededBy = $neededBy !== '' ? $neededBy : null;
+
+    $statement->bind_param('sssssissss', $fullName, $email, $phone, $company, $productName, $quantity, $specifications, $neededBy, $status, $source);
+    $statement->execute();
+    $statement->close();
+}

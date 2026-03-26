@@ -4,6 +4,93 @@ if (!defined('APP_BOOTSTRAPPED')) {
     exit;
 }
 
+require_once dirname(__DIR__, 2) . '/includes/database.php';
+
+$bannerOrderError = '';
+$bannerForm = [
+    'full_name' => trim((string) authFullName($currentUser ?? null)),
+    'email' => trim((string) ($currentUser['email'] ?? '')),
+    'phone' => '',
+    'company' => '',
+    'material' => 'tarpaulin380',
+    'quantity' => '1',
+    'width' => '',
+    'height' => '',
+    'finishing' => '',
+    'environment' => '',
+    'needed_by' => '',
+    'notes' => '',
+    'estimated_total' => '',
+];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bannerForm['full_name'] = trim((string) ($_POST['full_name'] ?? $bannerForm['full_name']));
+    $bannerForm['email'] = trim((string) ($_POST['email'] ?? $bannerForm['email']));
+    $bannerForm['phone'] = trim((string) ($_POST['phone'] ?? ''));
+    $bannerForm['company'] = trim((string) ($_POST['company'] ?? ''));
+    $bannerForm['material'] = trim((string) ($_POST['bannerMaterial'] ?? ''));
+    $bannerForm['quantity'] = trim((string) ($_POST['bannerQuantity'] ?? '1'));
+    $bannerForm['width'] = trim((string) ($_POST['bannerWidth'] ?? ''));
+    $bannerForm['height'] = trim((string) ($_POST['bannerHeight'] ?? ''));
+    $bannerForm['finishing'] = trim((string) ($_POST['bannerFinishing'] ?? ''));
+    $bannerForm['environment'] = trim((string) ($_POST['bannerEnvironment'] ?? ''));
+    $bannerForm['needed_by'] = trim((string) ($_POST['needed_by'] ?? ''));
+    $bannerForm['notes'] = trim((string) ($_POST['notes'] ?? ''));
+    $bannerForm['estimated_total'] = trim((string) ($_POST['estimated_total'] ?? ''));
+    $csrfToken = $_POST['csrf_token'] ?? '';
+
+    if (!authVerifyCsrfToken($csrfToken)) {
+        $bannerOrderError = 'Your session expired. Please refresh and try again.';
+    } elseif ($bannerForm['full_name'] === '' || $bannerForm['email'] === '') {
+        $bannerOrderError = 'Full name and email are required so staff can follow up.';
+    } elseif (!filter_var($bannerForm['email'], FILTER_VALIDATE_EMAIL)) {
+        $bannerOrderError = 'Please provide a valid email address.';
+    } elseif ($bannerForm['material'] !== 'tarpaulin380') {
+        $bannerOrderError = 'Please choose a valid banner material.';
+    } elseif (!in_array($bannerForm['finishing'], ['eyeletOnly', 'eyeletRope', 'cutToSize', 'ropeOnly', 'foldingEdges'], true)) {
+        $bannerOrderError = 'Please choose a valid finishing option.';
+    } elseif (!in_array($bannerForm['environment'], ['indoor', 'outdoor'], true)) {
+        $bannerOrderError = 'Please choose where the banner will be displayed.';
+    } elseif ((int) $bannerForm['quantity'] < 1 || (float) $bannerForm['width'] <= 0 || (float) $bannerForm['height'] <= 0) {
+        $bannerOrderError = 'Quantity, width, and height must be greater than zero.';
+    } else {
+        $specificationParts = [
+            'Material: Tarpaulin 380gsm',
+            'Size: ' . $bannerForm['width'] . ' kaki x ' . $bannerForm['height'] . ' kaki',
+            'Finishing: ' . str_replace(['eyeletOnly', 'eyeletRope', 'cutToSize', 'ropeOnly', 'foldingEdges'], ['Eyelet only', 'Eyelet + rope', 'Cut to size', 'Rope only', 'Folding edges'], $bannerForm['finishing']),
+            'Environment: ' . ucfirst($bannerForm['environment']),
+        ];
+
+        if ($bannerForm['estimated_total'] !== '') {
+            $specificationParts[] = 'Estimated total: ' . $bannerForm['estimated_total'];
+        }
+
+        if ($bannerForm['notes'] !== '') {
+            $specificationParts[] = 'Notes: ' . $bannerForm['notes'];
+        }
+
+        dbCreateQuote(dbConnection(), [
+            'full_name' => $bannerForm['full_name'],
+            'email' => $bannerForm['email'],
+            'phone' => $bannerForm['phone'],
+            'company' => $bannerForm['company'],
+            'product_name' => 'Banner Order',
+            'quantity' => (int) $bannerForm['quantity'],
+            'specifications' => implode(' | ', $specificationParts),
+            'needed_by' => $bannerForm['needed_by'],
+            'status' => 'new',
+            'source' => 'banner-order',
+        ]);
+
+        authFlash('success', 'Your banner order has been sent to staff for review.');
+        if (!empty($currentUser)) {
+            authRedirect($basePath, '/account/quotes/');
+        }
+
+        authRedirect($basePath, '/products/banners/');
+    }
+}
+
 $pageTitle = 'Custom Banners | SilentPrint';
 
 include dirname(__DIR__, 2) . '/includes/header.php';
@@ -45,7 +132,12 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 <div class="content-card h-100">
                     <h2 class="fw-bold mb-3">Customize your banner</h2>
                     <p class="text-muted mb-4">Live estimate is based on Tarpaulin 380gsm at RM1.50 per square kaki.</p>
-                    <form action="#" method="post">
+                    <?php if ($bannerOrderError !== ''): ?>
+                        <div class="alert alert-danger auth-alert" role="alert"><?= htmlspecialchars($bannerOrderError) ?></div>
+                    <?php endif; ?>
+                    <form action="" method="post">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
+                        <input type="hidden" id="bannerEstimatedTotalInput" name="estimated_total" value="<?= htmlspecialchars($bannerForm['estimated_total']) ?>">
                         <div class="row g-4">
                             <div class="col-12">
                                 <div class="alert alert-info bunting-price-sticky" id="bannerPriceDisplay" style="font-size:1.2em;">
@@ -53,42 +145,66 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <label for="full_name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" value="<?= htmlspecialchars($bannerForm['full_name']) ?>" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($bannerForm['email']) ?>" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" value="<?= htmlspecialchars($bannerForm['phone']) ?>" placeholder="Optional contact number">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="company" class="form-label">Company</label>
+                                <input type="text" class="form-control" id="company" name="company" value="<?= htmlspecialchars($bannerForm['company']) ?>" placeholder="Optional company name">
+                            </div>
+                            <div class="col-md-6">
                                 <label for="bannerMaterial" class="form-label">Material Type</label>
                                 <select class="form-select" id="bannerMaterial" name="bannerMaterial" required>
                                     <option value="">Select material</option>
-                                    <option value="tarpaulin380" selected>Tarpaulin 380gsm (RM1.50 per sq kaki)</option>
+                                    <option value="tarpaulin380" <?= $bannerForm['material'] === 'tarpaulin380' ? 'selected' : '' ?>>Tarpaulin 380gsm (RM1.50 per sq kaki)</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="bannerQuantity" class="form-label">Quantity</label>
-                                <input type="number" min="1" step="1" value="1" class="form-control" id="bannerQuantity" name="bannerQuantity" required>
+                                <input type="number" min="1" step="1" value="<?= htmlspecialchars($bannerForm['quantity']) ?>" class="form-control" id="bannerQuantity" name="bannerQuantity" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="bannerWidth" class="form-label">Width (kaki)</label>
-                                <input type="number" min="1" step="0.1" class="form-control" id="bannerWidth" name="bannerWidth" placeholder="e.g. 4" required>
+                                <input type="number" min="1" step="0.1" class="form-control" id="bannerWidth" name="bannerWidth" placeholder="e.g. 4" value="<?= htmlspecialchars($bannerForm['width']) ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="bannerHeight" class="form-label">Height (kaki)</label>
-                                <input type="number" min="1" step="0.1" class="form-control" id="bannerHeight" name="bannerHeight" placeholder="e.g. 2" required>
+                                <input type="number" min="1" step="0.1" class="form-control" id="bannerHeight" name="bannerHeight" placeholder="e.g. 2" value="<?= htmlspecialchars($bannerForm['height']) ?>" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="bannerFinishing" class="form-label">Finishing</label>
                                 <select class="form-select" id="bannerFinishing" name="bannerFinishing" required>
                                     <option value="">Select finishing</option>
-                                    <option value="eyeletOnly">Eyelet only</option>
-                                    <option value="eyeletRope">Eyelet + rope</option>
-                                    <option value="cutToSize">Cut to size</option>
-                                    <option value="ropeOnly">Rope only</option>
-                                    <option value="foldingEdges">Folding edges</option>
+                                    <option value="eyeletOnly" <?= $bannerForm['finishing'] === 'eyeletOnly' ? 'selected' : '' ?>>Eyelet only</option>
+                                    <option value="eyeletRope" <?= $bannerForm['finishing'] === 'eyeletRope' ? 'selected' : '' ?>>Eyelet + rope</option>
+                                    <option value="cutToSize" <?= $bannerForm['finishing'] === 'cutToSize' ? 'selected' : '' ?>>Cut to size</option>
+                                    <option value="ropeOnly" <?= $bannerForm['finishing'] === 'ropeOnly' ? 'selected' : '' ?>>Rope only</option>
+                                    <option value="foldingEdges" <?= $bannerForm['finishing'] === 'foldingEdges' ? 'selected' : '' ?>>Folding edges</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
                                 <label for="bannerEnvironment" class="form-label">Display Environment</label>
                                 <select class="form-select" id="bannerEnvironment" name="bannerEnvironment" required>
                                     <option value="">Select environment</option>
-                                    <option value="indoor">Indoor</option>
-                                    <option value="outdoor">Outdoor</option>
+                                    <option value="indoor" <?= $bannerForm['environment'] === 'indoor' ? 'selected' : '' ?>>Indoor</option>
+                                    <option value="outdoor" <?= $bannerForm['environment'] === 'outdoor' ? 'selected' : '' ?>>Outdoor</option>
                                 </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="needed_by" class="form-label">Needed By</label>
+                                <input type="date" class="form-control" id="needed_by" name="needed_by" value="<?= htmlspecialchars($bannerForm['needed_by']) ?>">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="notes" class="form-label">Additional Notes</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="1" placeholder="Installation or delivery notes"><?= htmlspecialchars($bannerForm['notes']) ?></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="bannerDesignFile" class="form-label">Upload Design (optional)</label>
@@ -164,6 +280,7 @@ function calculateBannerPrice() {
 
     document.getElementById('bannerCalculatedPrice').textContent = price;
     document.getElementById('bannerCalculatedPriceFloating').textContent = price;
+    document.getElementById('bannerEstimatedTotalInput').value = price === '-' ? '' : price;
 }
 
 function toggleFloatingBannerPrice() {
