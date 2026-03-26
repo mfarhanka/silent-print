@@ -8,12 +8,12 @@ include dirname(__DIR__, 2) . '/includes/header.php';
 ?>
 
 <!-- Products Page Content -->
-<section class="py-5">
+<section class="py-5 product-catalog-section">
     <div class="container">
         <h2 class="fw-bold mb-4">Our Products</h2>
         <div class="row g-4">
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/calendars.png" class="card-img-top" alt="Calendars">
                     <div class="card-body">
                         <h5 class="card-title">Calendars</h5>
@@ -22,7 +22,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/banners.png" class="card-img-top" alt="Banners">
                     <div class="card-body">
                         <h5 class="card-title">Banners</h5>
@@ -32,7 +32,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/buntings.png" class="card-img-top" alt="Bunting">
                     <div class="card-body">
                         <h5 class="card-title">Bunting</h5>
@@ -42,7 +42,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/notebooks.png" class="card-img-top" alt="Notebooks">
                     <div class="card-body">
                         <h5 class="card-title">Notebooks</h5>
@@ -51,7 +51,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/paper-bags.png" class="card-img-top" alt="Paper Bags">
                     <div class="card-body">
                         <h5 class="card-title">Paper Bags</h5>
@@ -60,7 +60,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/business-cards.png" class="card-img-top" alt="Business Cards">
                     <div class="card-body">
                         <h5 class="card-title">Business Cards</h5>
@@ -70,7 +70,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/envelopes.png" class="card-img-top" alt="Envelopes">
                     <div class="card-body">
                         <h5 class="card-title">Envelopes</h5>
@@ -79,7 +79,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/folder-sets.png" class="card-img-top" alt="Folder Sets">
                     <div class="card-body">
                         <h5 class="card-title">Folder Sets</h5>
@@ -88,7 +88,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/food-packing.png" class="card-img-top" alt="Food Packaging">
                     <div class="card-body">
                         <h5 class="card-title">Food Packaging</h5>
@@ -97,7 +97,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card h-100">
+                <div class="card h-100 product-catalog-card">
                     <img src="<?= $basePath ?>/img/products/marketing-materials.png" class="card-img-top" alt="Marketing Materials">
                     <div class="card-body">
                         <h5 class="card-title">Marketing Materials</h5>

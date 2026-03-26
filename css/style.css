@@ -194,6 +194,13 @@ html {
     font-weight: 600;
 }
 
+.product-catalog-card .card-img-top {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+}
+
 .article-image {
     width: 100%;
     border-radius: 20px;
