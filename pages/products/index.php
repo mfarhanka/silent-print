@@ -23,6 +23,16 @@ include dirname(__DIR__, 2) . '/includes/header.php';
             </div>
             <div class="col-md-3">
                 <div class="card h-100">
+                    <img src="<?= $basePath ?>/img/products/banners.png" class="card-img-top" alt="Banners">
+                    <div class="card-body">
+                        <h5 class="card-title">Banners</h5>
+                        <p class="card-text">Large-format banners for promotions, events, storefront displays, and brand campaigns.</p>
+                        <a href="<?= $basePath ?>/products/banners/" class="btn btn-outline-primary btn-sm mt-2 w-100">Customize &amp; Order</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card h-100">
                     <img src="<?= $basePath ?>/img/products/notebooks.png" class="card-img-top" alt="Notebooks">
                     <div class="card-body">
                         <h5 class="card-title">Notebooks</h5>

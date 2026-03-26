@@ -27,6 +27,7 @@ $redirects = [
 	'index.php' => '/',
 	'admin.php' => '/admin/',
 	'products.php' => '/products/',
+	'banners.php' => '/products/banners/',
 	'business-card.php' => '/products/business-card/',
 	'pages' => '/',
 	'pages/' => '/',
@@ -43,6 +44,8 @@ $redirects = [
 	'pages/products' => '/products/',
 	'pages/products/' => '/products/',
 	'pages/products/index.php' => '/products/',
+	'pages/products/banners' => '/products/banners/',
+	'pages/products/banners.php' => '/products/banners/',
 	'pages/products/business-card' => '/products/business-card/',
 	'pages/products/business-card.php' => '/products/business-card/',
 ];
@@ -59,6 +62,10 @@ $routes = [
 	],
 	'products' => [
 		'file' => __DIR__ . '/pages/products/index.php',
+		'currentNav' => 'products',
+	],
+	'products/banners' => [
+		'file' => __DIR__ . '/pages/products/banners.php',
 		'currentNav' => 'products',
 	],
 	'products/business-card' => [
