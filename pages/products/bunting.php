@@ -35,33 +35,59 @@ include dirname(__DIR__, 2) . '/includes/header.php';
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="content-card h-100">
-                    <h2 class="fw-bold mb-3">Bunting applications</h2>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="account-stat h-100">
-                                <div class="fw-semibold mb-2">Retail promotions</div>
-                                <div class="small text-muted">Use buntings to highlight store openings, promotions, and seasonal sales at high visibility points.</div>
+                    <h2 class="fw-bold mb-3">Customize your bunting</h2>
+                    <p class="text-muted mb-4">Live estimate is based on the standard bunting sizes and prices you listed.</p>
+                    <form action="#" method="post">
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <div class="alert alert-info" id="buntingPriceDisplay" style="font-size:1.2em;">
+                                    Total Price: <span id="buntingCalculatedPrice">-</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="buntingSize" class="form-label">Bunting Size</label>
+                                <select class="form-select" id="buntingSize" name="buntingSize" required>
+                                    <option value="">Select size</option>
+                                    <option value="3.00">2 x 1 - RM3.00</option>
+                                    <option value="6.00">2 x 2 - RM6.00</option>
+                                    <option value="9.00">2 x 3 - RM9.00</option>
+                                    <option value="12.00">2 x 4 - RM12.00</option>
+                                    <option value="15.00">2 x 5 - RM15.00</option>
+                                    <option value="18.00">2 x 6 - RM18.00</option>
+                                    <option value="21.00">2 x 7 - RM21.00</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="buntingQuantity" class="form-label">Quantity</label>
+                                <input type="number" min="1" step="1" value="1" class="form-control" id="buntingQuantity" name="buntingQuantity" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="buntingEnvironment" class="form-label">Display Environment</label>
+                                <select class="form-select" id="buntingEnvironment" name="buntingEnvironment" required>
+                                    <option value="">Select environment</option>
+                                    <option value="indoor">Indoor</option>
+                                    <option value="outdoor">Outdoor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="buntingUse" class="form-label">Primary Use</label>
+                                <select class="form-select" id="buntingUse" name="buntingUse" required>
+                                    <option value="">Select use case</option>
+                                    <option value="promotion">Promotion</option>
+                                    <option value="roadshow">Roadshow</option>
+                                    <option value="wayfinding">Wayfinding</option>
+                                    <option value="event">Event display</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="buntingDesignFile" class="form-label">Upload Design (optional)</label>
+                                <input class="form-control" type="file" id="buntingDesignFile" name="buntingDesignFile" accept=".jpg,.jpeg,.png,.pdf">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary px-5">Submit Request</button>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="account-stat h-100">
-                                <div class="fw-semibold mb-2">Roadshows and booths</div>
-                                <div class="small text-muted">Portable vertical signage that works well around exhibition spaces and event registration zones.</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="account-stat h-100">
-                                <div class="fw-semibold mb-2">Directional signage</div>
-                                <div class="small text-muted">Guide visitors toward entrances, counters, launch areas, or campaign touchpoints.</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="account-stat h-100">
-                                <div class="fw-semibold mb-2">Custom production</div>
-                                <div class="small text-muted">Specify size, finishing, and installation method based on where the bunting will be displayed.</div>
-                            </div>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -95,5 +121,28 @@ include dirname(__DIR__, 2) . '/includes/header.php';
         </div>
     </div>
 </section>
+
+<script>
+function calculateBuntingPrice() {
+    const sizePrice = Number(document.getElementById('buntingSize').value);
+    const quantity = Number(document.getElementById('buntingQuantity').value);
+    const environment = document.getElementById('buntingEnvironment').value;
+    const useCase = document.getElementById('buntingUse').value;
+    let price = '-';
+
+    if (sizePrice > 0 && quantity > 0 && environment && useCase) {
+        price = 'MYR ' + (sizePrice * quantity).toFixed(2);
+    }
+
+    document.getElementById('buntingCalculatedPrice').textContent = price;
+}
+
+document.getElementById('buntingSize').addEventListener('change', calculateBuntingPrice);
+document.getElementById('buntingQuantity').addEventListener('input', calculateBuntingPrice);
+document.getElementById('buntingEnvironment').addEventListener('change', calculateBuntingPrice);
+document.getElementById('buntingUse').addEventListener('change', calculateBuntingPrice);
+
+calculateBuntingPrice();
+</script>
 
 <?php include dirname(__DIR__, 2) . '/includes/footer.php'; ?>
