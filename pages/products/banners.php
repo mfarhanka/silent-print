@@ -67,10 +67,11 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                                 <label for="bannerFinishing" class="form-label">Finishing</label>
                                 <select class="form-select" id="bannerFinishing" name="bannerFinishing" required>
                                     <option value="">Select finishing</option>
-                                    <option value="standard">Standard</option>
-                                    <option value="eyelets">Eyelets (+RM8)</option>
-                                    <option value="hemming">Hemming (+RM12)</option>
-                                    <option value="eyeletsHemming">Eyelets + Hemming (+RM18)</option>
+                                    <option value="eyeletOnly">Eyelet only</option>
+                                    <option value="eyeletRope">Eyelet + rope</option>
+                                    <option value="cutToSize">Cut to size</option>
+                                    <option value="ropeOnly">Rope only</option>
+                                    <option value="foldingEdges">Folding edges</option>
                                 </select>
                             </div>
                             <div class="col-md-6">
@@ -130,10 +131,11 @@ const bannerRateTable = {
 };
 
 const bannerFinishingAdd = {
-    standard: 0,
-    eyelets: 8,
-    hemming: 12,
-    eyeletsHemming: 18
+    eyeletOnly: 0,
+    eyeletRope: 0,
+    cutToSize: 0,
+    ropeOnly: 0,
+    foldingEdges: 0
 };
 
 function calculateBannerPrice() {
