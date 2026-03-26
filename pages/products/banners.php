@@ -30,6 +30,14 @@ include dirname(__DIR__, 2) . '/includes/header.php';
     </div>
 </section>
 
+<div class="bunting-floating-total" id="bannerFloatingTotal" aria-hidden="true">
+    <div class="container">
+        <div class="alert alert-info bunting-floating-total__alert mb-0" style="font-size:1.2em;">
+            Total Price: <span id="bannerCalculatedPriceFloating">-</span>
+        </div>
+    </div>
+</div>
+
 <section class="pb-5">
     <div class="container">
         <div class="row g-4">
@@ -40,7 +48,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                     <form action="#" method="post">
                         <div class="row g-4">
                             <div class="col-12">
-                                <div class="alert alert-info" id="bannerPriceDisplay" style="font-size:1.2em;">
+                                <div class="alert alert-info bunting-price-sticky" id="bannerPriceDisplay" style="font-size:1.2em;">
                                     Total Price: <span id="bannerCalculatedPrice">-</span>
                                 </div>
                             </div>
@@ -155,6 +163,25 @@ function calculateBannerPrice() {
     }
 
     document.getElementById('bannerCalculatedPrice').textContent = price;
+    document.getElementById('bannerCalculatedPriceFloating').textContent = price;
+}
+
+function toggleFloatingBannerPrice() {
+    const inlinePrice = document.getElementById('bannerPriceDisplay');
+    const floatingBar = document.getElementById('bannerFloatingTotal');
+
+    if (!inlinePrice || !floatingBar) {
+        return;
+    }
+
+    const inlinePriceTop = inlinePrice.getBoundingClientRect().top;
+    if (inlinePriceTop <= 96) {
+        floatingBar.classList.add('is-visible');
+        floatingBar.setAttribute('aria-hidden', 'false');
+    } else {
+        floatingBar.classList.remove('is-visible');
+        floatingBar.setAttribute('aria-hidden', 'true');
+    }
 }
 
 document.getElementById('bannerMaterial').addEventListener('change', calculateBannerPrice);
@@ -164,7 +191,11 @@ document.getElementById('bannerHeight').addEventListener('input', calculateBanne
 document.getElementById('bannerFinishing').addEventListener('change', calculateBannerPrice);
 document.getElementById('bannerEnvironment').addEventListener('change', calculateBannerPrice);
 
+window.addEventListener('scroll', toggleFloatingBannerPrice, { passive: true });
+window.addEventListener('resize', toggleFloatingBannerPrice);
+
 calculateBannerPrice();
+toggleFloatingBannerPrice();
 </script>
 
 <?php include dirname(__DIR__, 2) . '/includes/footer.php'; ?>

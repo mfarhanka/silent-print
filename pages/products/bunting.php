@@ -30,6 +30,14 @@ include dirname(__DIR__, 2) . '/includes/header.php';
     </div>
 </section>
 
+<div class="bunting-floating-total" id="buntingFloatingTotal" aria-hidden="true">
+    <div class="container">
+        <div class="alert alert-info bunting-floating-total__alert mb-0" style="font-size:1.2em;">
+            Total Price: <span id="buntingCalculatedPriceFloating">-</span>
+        </div>
+    </div>
+</div>
+
 <section class="pb-5">
     <div class="container">
         <div class="row g-4">
@@ -40,7 +48,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
                     <form action="#" method="post">
                         <div class="row g-4">
                             <div class="col-12">
-                                <div class="alert alert-info" id="buntingPriceDisplay" style="font-size:1.2em;">
+                                <div class="alert alert-info bunting-price-sticky" id="buntingPriceDisplay" style="font-size:1.2em;">
                                     Total Price: <span id="buntingCalculatedPrice">-</span>
                                 </div>
                             </div>
@@ -135,6 +143,25 @@ function calculateBuntingPrice() {
     }
 
     document.getElementById('buntingCalculatedPrice').textContent = price;
+    document.getElementById('buntingCalculatedPriceFloating').textContent = price;
+}
+
+function toggleFloatingBuntingPrice() {
+    const inlinePrice = document.getElementById('buntingPriceDisplay');
+    const floatingBar = document.getElementById('buntingFloatingTotal');
+
+    if (!inlinePrice || !floatingBar) {
+        return;
+    }
+
+    const inlinePriceTop = inlinePrice.getBoundingClientRect().top;
+    if (inlinePriceTop <= 96) {
+        floatingBar.classList.add('is-visible');
+        floatingBar.setAttribute('aria-hidden', 'false');
+    } else {
+        floatingBar.classList.remove('is-visible');
+        floatingBar.setAttribute('aria-hidden', 'true');
+    }
 }
 
 document.getElementById('buntingSize').addEventListener('change', calculateBuntingPrice);
@@ -142,7 +169,11 @@ document.getElementById('buntingQuantity').addEventListener('input', calculateBu
 document.getElementById('buntingEnvironment').addEventListener('change', calculateBuntingPrice);
 document.getElementById('buntingUse').addEventListener('change', calculateBuntingPrice);
 
+window.addEventListener('scroll', toggleFloatingBuntingPrice, { passive: true });
+window.addEventListener('resize', toggleFloatingBuntingPrice);
+
 calculateBuntingPrice();
+toggleFloatingBuntingPrice();
 </script>
 
 <?php include dirname(__DIR__, 2) . '/includes/footer.php'; ?>

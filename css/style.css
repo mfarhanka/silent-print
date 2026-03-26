@@ -289,6 +289,31 @@ body.client-login-page .auth-shell {
     border: 1px solid rgba(0, 51, 102, 0.08);
 }
 
+.bunting-price-sticky {
+    box-shadow: 0 14px 32px rgba(0, 51, 102, 0.12);
+}
+
+.bunting-floating-total {
+    position: fixed;
+    top: 88px;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-12px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bunting-floating-total.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.bunting-floating-total__alert {
+    box-shadow: 0 16px 36px rgba(0, 51, 102, 0.16);
+}
+
 @media (max-width: 767.98px) {
     .auth-aside,
     .auth-form-wrap {
@@ -299,6 +324,10 @@ body.client-login-page .auth-shell {
 @media (max-width: 767.98px) {
     .content-card {
         padding: 24px;
+    }
+
+    .bunting-floating-total {
+        top: 76px;
     }
 }
 

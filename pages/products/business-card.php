@@ -7,6 +7,14 @@ if (!defined('APP_BOOTSTRAPPED')) {
 include dirname(__DIR__, 2) . '/includes/header.php';
 ?>
 
+<div class="bunting-floating-total" id="businessCardFloatingTotal" aria-hidden="true">
+    <div class="container">
+        <div class="alert alert-info bunting-floating-total__alert mb-0" style="font-size:1.2em;">
+            Total Price: <span id="calculatedPriceFloating">-</span>
+        </div>
+    </div>
+</div>
+
 <!-- Business Card Customization Page -->
 <section class="py-5">
     <div class="container">
@@ -14,7 +22,7 @@ include dirname(__DIR__, 2) . '/includes/header.php';
         <form action="#" method="post">
             <div class="row g-4">
                 <div class="col-12">
-                    <div class="alert alert-info" id="priceDisplay" style="font-size:1.2em;">
+                    <div class="alert alert-info bunting-price-sticky" id="priceDisplay" style="font-size:1.2em;">
                         Total Price: <span id="calculatedPrice">-</span>
                     </div>
                 </div>
@@ -101,6 +109,25 @@ function calculatePrice() {
     }
 
     document.getElementById('calculatedPrice').textContent = price;
+    document.getElementById('calculatedPriceFloating').textContent = price;
+}
+
+function toggleFloatingBusinessCardPrice() {
+    const inlinePrice = document.getElementById('priceDisplay');
+    const floatingBar = document.getElementById('businessCardFloatingTotal');
+
+    if (!inlinePrice || !floatingBar) {
+        return;
+    }
+
+    const inlinePriceTop = inlinePrice.getBoundingClientRect().top;
+    if (inlinePriceTop <= 96) {
+        floatingBar.classList.add('is-visible');
+        floatingBar.setAttribute('aria-hidden', 'false');
+    } else {
+        floatingBar.classList.remove('is-visible');
+        floatingBar.setAttribute('aria-hidden', 'true');
+    }
 }
 
 document.getElementById('paperType').addEventListener('change', calculatePrice);
@@ -108,6 +135,12 @@ document.getElementById('sideType').addEventListener('change', calculatePrice);
 document.getElementById('quantity').addEventListener('change', calculatePrice);
 document.getElementById('finish').addEventListener('change', calculatePrice);
 document.getElementById('corner').addEventListener('change', calculatePrice);
+
+window.addEventListener('scroll', toggleFloatingBusinessCardPrice, { passive: true });
+window.addEventListener('resize', toggleFloatingBusinessCardPrice);
+
+calculatePrice();
+toggleFloatingBusinessCardPrice();
 </script>
 
 <?php include dirname(__DIR__, 2) . '/includes/footer.php'; ?>
