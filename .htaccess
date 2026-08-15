@@ -1,5 +1,10 @@
 RewriteEngine On
 
+# Serve public e-card pages directly instead of sending them through the
+# application's PHP router. Individual e-card folders should contain an
+# index.html or index.php file.
+RewriteRule ^ekad(?:/|$) - [L]
+
 # Serve existing files and directories directly.
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
