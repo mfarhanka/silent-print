@@ -315,9 +315,63 @@ body.client-login-page .auth-shell {
 }
 
 @media (max-width: 767.98px) {
+    body.client-login-page .auth-shell,
+    body.admin-login-page .auth-shell {
+        padding-top: 0;
+        padding-bottom: 0;
+        align-items: flex-start;
+    }
+
     .auth-aside,
     .auth-form-wrap {
         padding: 28px 24px;
+    }
+
+    .auth-panel {
+        border-radius: 20px;
+    }
+
+    .auth-aside {
+        height: auto;
+        padding-top: 22px;
+        padding-bottom: 22px;
+    }
+
+    .auth-aside .site-logo {
+        height: 42px;
+    }
+
+    .auth-aside a.mb-4 {
+        margin-bottom: 1rem !important;
+    }
+
+    .auth-aside h1 {
+        margin-bottom: 0 !important;
+        font-size: 1.65rem;
+    }
+
+    .auth-aside h1 + p,
+    .auth-aside > .mt-5 {
+        display: none;
+    }
+
+    .auth-form-wrap > .d-flex:first-child {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 14px !important;
+    }
+
+    .auth-form-wrap > .d-flex:first-child .btn {
+        width: 100%;
+    }
+
+    .auth-form-wrap .alert-info form {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .auth-form-wrap .alert-info .btn {
+        padding-inline: 8px;
     }
 }
 

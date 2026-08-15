@@ -25,22 +25,30 @@ $normalizedPath = trim($requestPath, '/');
 
 $redirects = [
 	'index.php' => '/',
-	'admin.php' => '/admin/',
+	'account' => '/',
+	'account/quotes' => '/',
+	'account/profile' => '/',
+	'admin' => '/',
+	'admin/quotes' => '/',
+	'admin/users' => '/',
+	'admin/security' => '/',
+	'admin/system' => '/',
+	'admin.php' => '/',
 	'products.php' => '/products/',
 	'banners.php' => '/products/banners/',
 	'bunting.php' => '/products/bunting/',
 	'business-card.php' => '/products/business-card/',
 	'pages' => '/',
 	'pages/' => '/',
-	'pages/admin' => '/admin/',
-	'pages/admin/' => '/admin/',
-	'pages/admin.php' => '/admin/',
-	'pages/admin/index.php' => '/admin/',
+	'pages/admin' => '/',
+	'pages/admin/' => '/',
+	'pages/admin.php' => '/',
+	'pages/admin/index.php' => '/',
 	'pages/admin/login.php' => '/admin/login/',
-	'pages/account' => '/account/',
-	'pages/account/' => '/account/',
-	'pages/account.php' => '/account/',
-	'pages/account/index.php' => '/account/',
+	'pages/account' => '/',
+	'pages/account/' => '/',
+	'pages/account.php' => '/',
+	'pages/account/index.php' => '/',
 	'pages/index.php' => '/',
 	'pages/products' => '/products/',
 	'pages/products/' => '/products/',
@@ -96,30 +104,6 @@ $routes = [
 	],
 	'signup' => [
 		'file' => __DIR__ . '/pages/signup.php',
-	],
-	'account' => [
-		'file' => __DIR__ . '/pages/account/index.php',
-	],
-	'account/quotes' => [
-		'file' => __DIR__ . '/pages/account/quotes.php',
-	],
-	'account/profile' => [
-		'file' => __DIR__ . '/pages/account/profile.php',
-	],
-	'admin' => [
-		'file' => __DIR__ . '/pages/admin/index.php',
-	],
-	'admin/quotes' => [
-		'file' => __DIR__ . '/pages/admin/quotes.php',
-	],
-	'admin/users' => [
-		'file' => __DIR__ . '/pages/admin/users.php',
-	],
-	'admin/security' => [
-		'file' => __DIR__ . '/pages/admin/security.php',
-	],
-	'admin/system' => [
-		'file' => __DIR__ . '/pages/admin/system.php',
 	],
 	'logout' => [
 		'file' => __DIR__ . '/pages/logout.php',

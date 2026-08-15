@@ -83,10 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         authFlash('success', 'Your banner order has been sent to staff for review.');
-        if (!empty($currentUser)) {
-            authRedirect($basePath, '/account/quotes/');
-        }
-
         authRedirect($basePath, '/products/banners/');
     }
 }

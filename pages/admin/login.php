@@ -12,12 +12,19 @@ $loginError = '';
 $loginEmail = trim((string) ($_POST['email'] ?? ''));
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $quickRole = trim((string) ($_POST['quick_role'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
-    $user = authFindUserByEmail($loginEmail);
     $csrfToken = $_POST['csrf_token'] ?? '';
+    $user = $quickRole !== '' ? authTestUser($quickRole) : authFindUserByEmail($loginEmail);
 
     if (!authVerifyCsrfToken($csrfToken)) {
         $loginError = 'Your session expired. Please try again.';
+    } elseif ($quickRole !== '' && !$user) {
+        $loginError = 'The selected quick-login role is invalid.';
+    } elseif ($quickRole !== '') {
+        authLoginUser($user);
+        authFlash('success', 'Local test login: ' . authRoleLabel($user) . '.');
+        authRedirect($basePath, authLoginDestination($user));
     } elseif ($loginEmail === '' || $password === '') {
         $loginError = 'Email and password are required.';
     } elseif (!$user || !password_verify($password, $user['password_hash'] ?? '')) {
@@ -26,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $loginError = 'This login is only for admin and staff accounts. Use the client login instead.';
     } else {
         authLoginUser($user);
-        authFlash('success', 'You are now logged in to the management console.');
+        authFlash('success', 'You are now logged in.');
         authRedirect($basePath, authLoginDestination($user));
     }
 }
@@ -48,7 +55,6 @@ $pageTitle = 'Admin Login | SilentPrint';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= $basePath ?>/css/style.css">
-    <link rel="stylesheet" href="<?= $basePath ?>/css/admin.css">
 </head>
 <body class="admin-login-page">
     <?php if (!empty($flash['message'])): ?>
@@ -90,13 +96,22 @@ $pageTitle = 'Admin Login | SilentPrint';
                                     <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
                                         <div>
                                             <h2 class="fw-bold mb-2">Admin / Staff Login</h2>
-                                            <p class="text-muted mb-0">Enter your backoffice account credentials to access the management console.</p>
+                                            <p class="text-muted mb-0">Enter your backoffice account credentials to continue to the storefront.</p>
                                         </div>
                                         <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary rounded-pill px-3">Client Login</a>
                                     </div>
                                     <?php if ($loginError !== ''): ?>
                                         <div class="alert alert-danger auth-alert" role="alert"><?= htmlspecialchars($loginError) ?></div>
                                     <?php endif; ?>
+                                        <div class="alert alert-info auth-alert" role="region" aria-label="Testing shortcuts">
+                                            <div class="fw-semibold mb-2">Quick login</div>
+                                            <form action="" method="post" class="d-flex flex-wrap gap-2">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
+                                                <?php foreach (['customer' => 'Customer', 'staff' => 'Staff', 'admin' => 'Admin'] as $role => $label): ?>
+                                                    <button type="submit" name="quick_role" value="<?= $role ?>" class="btn btn-sm btn-outline-primary rounded-pill"><?= $label ?></button>
+                                                <?php endforeach; ?>
+                                            </form>
+                                        </div>
                                     <form action="" method="post" novalidate>
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
                                         <div class="mb-3">
@@ -111,11 +126,11 @@ $pageTitle = 'Admin Login | SilentPrint';
                                             <input type="password" class="form-control auth-input" id="adminPassword" name="password" placeholder="Enter your password" required>
                                         </div>
                                         <div class="d-grid gap-3">
-                                            <button type="submit" class="btn btn-primary rounded-pill py-2">Open Console</button>
+                                            <button type="submit" class="btn btn-primary rounded-pill py-2">Sign In</button>
                                         </div>
                                     </form>
                                     <p class="small text-muted mt-4 mb-2">Client account? <a href="<?= $basePath ?>/login/" class="text-decoration-none">Use the client login</a>.</p>
-                                    <p class="small text-muted mb-0">Successful login redirects admins to the admin dashboard and staff to the quotes operations console.</p>
+                                    <p class="small text-muted mb-0">Dashboard access is temporarily unavailable while the new experience is being rebuilt.</p>
                                 </div>
                             </div>
                         </div>

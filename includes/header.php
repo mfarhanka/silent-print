@@ -51,12 +51,7 @@ $extraStylesheets = is_array($extraStylesheets ?? null) ? $extraStylesheets : []
                         <button class="btn btn-light btn-sm dropdown-toggle" type="button">MYR</button>
                     </div>
                     <?php if (!empty($currentUser)): ?>
-                        <?php if (authHasBackofficeAccess($currentUser)): ?>
-                            <a href="<?= $basePath . authBackofficePath($currentUser) ?>" class="btn btn-light btn-sm rounded-pill px-3">Console</a>
-                        <?php endif; ?>
-                        <?php if (!authHasBackofficeAccess($currentUser)): ?>
-                            <a href="<?= $basePath ?>/account/" class="btn btn-outline-primary btn-sm rounded-pill px-3"><?= htmlspecialchars(authFullName($currentUser) ?: 'My Account') ?></a>
-                        <?php endif; ?>
+                        <span class="small fw-semibold d-none d-md-inline"><?= htmlspecialchars(authFullName($currentUser) ?: authRoleLabel($currentUser)) ?></span>
                         <a href="<?= $basePath ?>/logout/" class="btn btn-primary btn-sm rounded-pill px-3">Log Out</a>
                     <?php else: ?>
                         <a href="<?= $basePath ?>/login/" class="btn btn-outline-primary btn-sm rounded-pill px-3">Log In</a>

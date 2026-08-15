@@ -14,6 +14,34 @@ function authNormalizeEmail(string $email): string
     return strtolower(trim($email));
 }
 
+function authTestUser(string $role): ?array
+{
+    $requestedRole = strtolower(trim($role));
+    if (!in_array($requestedRole, ['customer', 'staff', 'admin'], true)) {
+        return null;
+    }
+    $normalizedRole = authNormalizeRole($requestedRole);
+
+    $email = $normalizedRole . '@local.silentprint.test';
+    $user = authFindUserByEmail($email);
+    if ($user) {
+        if (authNormalizeRole((string) ($user['role'] ?? '')) !== $normalizedRole) {
+            authUpdateUserRole($email, $normalizedRole);
+            $user = authFindUserByEmail($email);
+        }
+
+        return $user;
+    }
+
+    return authCreateUser([
+        'first_name' => 'Local',
+        'last_name' => ucfirst($normalizedRole),
+        'email' => $email,
+        'password' => bin2hex(random_bytes(24)),
+        'role' => $normalizedRole,
+    ]);
+}
+
 function authFindUserByEmail(string $email): ?array
 {
     $normalizedEmail = authNormalizeEmail($email);
@@ -173,24 +201,12 @@ function authHasBackofficeAccess(?array $user): bool
 
 function authBackofficePath(?array $user): string
 {
-    if (authIsAdmin($user)) {
-        return '/admin/';
-    }
-
-    if (authIsStaff($user)) {
-        return '/admin/quotes/';
-    }
-
-    return '/account/';
+    return '/';
 }
 
 function authLoginDestination(?array $user): string
 {
-    if (authHasBackofficeAccess($user)) {
-        return authBackofficePath($user);
-    }
-
-    return '/account/';
+    return '/';
 }
 
 function authIsCustomer(?array $user): bool
@@ -258,11 +274,7 @@ function authRequireUser(?array $currentUser, string $basePath): void
 function authRequireClientConsole(?array $currentUser, string $basePath): void
 {
     authRequireUser($currentUser, $basePath);
-
-    if (authHasBackofficeAccess($currentUser)) {
-        authFlash('info', 'Backoffice accounts use the management console instead of the client console.');
-        authRedirect($basePath, authBackofficePath($currentUser));
-    }
+    authRedirect($basePath, '/');
 }
 
 function authRequireAdmin(?array $currentUser, string $basePath): void
@@ -271,7 +283,7 @@ function authRequireAdmin(?array $currentUser, string $basePath): void
 
     if (!authIsAdmin($currentUser)) {
         authFlash('danger', 'Admin access is restricted to approved accounts.');
-        authRedirect($basePath, '/account/');
+        authRedirect($basePath, '/');
     }
 }
 
@@ -283,7 +295,7 @@ function authRequireBackoffice(?array $currentUser, string $basePath): void
 
     if (!authHasBackofficeAccess($currentUser)) {
         authFlash('danger', 'Backoffice access is restricted to admin and staff accounts.');
-        authRedirect($basePath, '/account/');
+        authRedirect($basePath, '/');
     }
 }
 

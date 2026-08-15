@@ -12,12 +12,19 @@ $loginError = '';
 $loginEmail = trim($_POST['email'] ?? '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $quickRole = trim((string) ($_POST['quick_role'] ?? ''));
     $password = $_POST['password'] ?? '';
-    $user = authFindUserByEmail($loginEmail);
     $csrfToken = $_POST['csrf_token'] ?? '';
+    $user = $quickRole !== '' ? authTestUser($quickRole) : authFindUserByEmail($loginEmail);
 
     if (!authVerifyCsrfToken($csrfToken)) {
         $loginError = 'Your session expired. Please try again.';
+    } elseif ($quickRole !== '' && !$user) {
+        $loginError = 'The selected quick-login role is invalid.';
+    } elseif ($quickRole !== '') {
+        authLoginUser($user);
+        authFlash('success', 'Local test login: ' . authRoleLabel($user) . '.');
+        authRedirect($basePath, authLoginDestination($user));
     } elseif ($loginEmail === '' || $password === '') {
         $loginError = 'Email and password are required.';
     } elseif (!$user || !password_verify($password, $user['password_hash'] ?? '')) {
@@ -94,6 +101,15 @@ $pageTitle = 'Log In | SilentPrint';
                                     <?php if ($loginError !== ''): ?>
                                         <div class="alert alert-danger auth-alert" role="alert"><?= htmlspecialchars($loginError) ?></div>
                                     <?php endif; ?>
+                                        <div class="alert alert-info auth-alert" role="region" aria-label="Testing shortcuts">
+                                            <div class="fw-semibold mb-2">Quick login</div>
+                                            <form action="" method="post" class="d-flex flex-wrap gap-2">
+                                                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
+                                                <?php foreach (['customer' => 'Customer', 'staff' => 'Staff', 'admin' => 'Admin'] as $role => $label): ?>
+                                                    <button type="submit" name="quick_role" value="<?= $role ?>" class="btn btn-sm btn-outline-primary rounded-pill"><?= $label ?></button>
+                                                <?php endforeach; ?>
+                                            </form>
+                                        </div>
                                     <form action="" method="post" novalidate>
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(authCsrfToken()) ?>">
                                         <div class="mb-3">
